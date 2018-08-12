@@ -10,6 +10,7 @@ app.use(express.static("public"));
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/css", express.static(__dirname + '/css'));
 app.use("/img/chesspieces/wikipedia", express.static(__dirname + '/img/chesspieces/wikipedia'));
+app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
 
 // ROUTES
 app.get("/", function(req, res) {
