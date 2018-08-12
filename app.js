@@ -59,14 +59,7 @@ app.use("/css", express.static(__dirname + '/css'));
 app.use("/img/chesspieces/wikipedia", express.static(__dirname + '/img/chesspieces/wikipedia'));
 app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
 
-
-
-// OLD INDEX ROUTE
-// app.get("/", function(req, res) {
-//     res.render("index");
-// });
-
-// NEW INDEX ROUTE
+// INDEX ROUTE
 app.get("/", function(req, res) {
     Move.find({}, function(err, allMoves){
         if(err){
@@ -79,5 +72,5 @@ app.get("/", function(req, res) {
 
 // SERVER PROCESS
 app.listen(3001, 'localhost', function() {
-    console.log("... port %d in %s mode");
+    console.log("server is up...");
 });
