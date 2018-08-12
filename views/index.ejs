@@ -8,13 +8,12 @@
         <div class="col-8">
             <h1>Welcome to ChessEOS</h1>
             <div id="board" style="width: 600px"></div>
-            <p>Status: <span id="status"></span></p>
             <p>FEN: <span id="fen"></span></p>
             <p>PGN: <span id="pgn"></span></p>
             <input type="button" id="getPositionBtn" value="Show position in console" />
         </div>
         <div id="move" class="col-4">
-            <h1>Moves</h1>
+            <h3><span id="status"></span></h3>
             <% moves.forEach(function(move){ %>
                 <ul>
                     <li><%= move.move %></li>
@@ -24,7 +23,6 @@
     </div>
 
     <script>
-        var moves = [];
         var board,
             game = new Chess(),
             statusEl = $('#status'),
@@ -92,7 +90,6 @@
         function clickGetPositionBtn() {
             console.log("Current position as an Object:");
             console.log(board.position());
-            moves.push(board.position());
             console.log("Current position as a FEN string:");
             console.log(board.fen());
         }
