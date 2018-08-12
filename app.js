@@ -3,9 +3,6 @@ var app = express();
 var bodyParser       = require("body-parser");
 var mongoose         = require("mongoose");
 
-var http = require('http')
-  , https = require('https');
-
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
