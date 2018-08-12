@@ -6,6 +6,12 @@ var mongoose         = require("mongoose");
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
+// SETUP RESOURCES TO BE USED
+app.use("/js", express.static(__dirname + '/js'));
+app.use("/css", express.static(__dirname + '/css'));
+app.use("/img/chesspieces/wikipedia", express.static(__dirname + '/img/chesspieces/wikipedia'));
+
+// ROUTES
 app.get("/", function(req, res) {
     res.render("index");
 });
