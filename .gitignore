@@ -1,4 +1,6 @@
 .idea/
+*.wast
+*.wasm
 node_modules/
 dist/
 .env
