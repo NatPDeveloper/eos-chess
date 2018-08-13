@@ -34,6 +34,14 @@ var data = [
     {
         player: "Cloud's rest", 
         move: "RE6"
+    },
+    {
+        player: "Cloud's rest", 
+        move: "RE6"
+    },
+    {
+        player: "Cloud's rest", 
+        move: "RE6"
     }
 ]
 
@@ -82,6 +90,7 @@ io.on('connection', function(socket) {
     socket.on('move', function(msg) {
         socket.broadcast.emit('move', msg);
         console.log(msg);
+        data.push(msg.to);
     });
 })
 

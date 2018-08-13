@@ -1,24 +1,33 @@
 <% include ./partials/header %>
 
-
-<div  align="center" class="container" id="main">
-    
+<div  align="center" class="container" id="main"> 
 
     <div class="row">
-        <div class="col-8">
+        <div class="col-6">
             <h1>Welcome to ChessEOS</h1>
             <div id="board" style="width: 600px"></div>
             <p>FEN: <span id="fen"></span></p>
             <p>PGN: <span id="pgn"></span></p>
             <input type="button" id="getPositionBtn" value="Show position in console" />
         </div>
-        <div id="move" class="col-4">
+        <div id="move" class="col-6">
             <h3><span id="status"></span></h3>
-            <% moves.forEach(function(move){ %>
-                <ul>
-                    <li><%= move.move %></li>
-                </ul>
-            <% }) %>
+            <form action="/game" method="POST">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="name" placeholder="enter the host's EOS account name">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Connect</button>
+                </div>
+            </form>
+            <div id="moves">
+                    <h4>MOVES</h4>
+                    <% moves.forEach(function(move){ %>
+                        <ul >
+                            <li id="move"><span><i class="fa fa-trash"></i></span><%= move.move %></li>
+                        </ul>
+                    <% }) %>
+                </div>
         </div>
     </div>
 
@@ -90,7 +99,6 @@
             statusEl.html(status);
             fenEl.html(game.fen());
             pgnEl.html(game.pgn());
-            
         };
         var cfg = {
             draggable: true,
@@ -108,9 +116,6 @@
         }
         $('#getPositionBtn').on('click', clickGetPositionBtn);
         updateStatus();
-
-        
-
     </script>
 </div>
 
