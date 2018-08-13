@@ -3,6 +3,11 @@ var app = express();
 var bodyParser       = require("body-parser");
 var mongoose         = require("mongoose");
 
+// SOCKET FORWARD DECLARATIONS
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+
 // APP CONFIG
 mongoose.connect("mongodb://localhost/chess_eos");
 app.set("view engine", "ejs");
@@ -58,6 +63,7 @@ app.use("/js", express.static(__dirname + '/js'));
 app.use("/css", express.static(__dirname + '/css'));
 app.use("/img/chesspieces/wikipedia", express.static(__dirname + '/img/chesspieces/wikipedia'));
 app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
+app.use("/node_modules", express.static(__dirname + '/node_modules'));
 
 // INDEX ROUTE
 app.get("/", function(req, res) {
@@ -70,7 +76,15 @@ app.get("/", function(req, res) {
      });
 });
 
-// SERVER PROCESS
-app.listen(3001, 'localhost', function() {
-    console.log("server is up...");
+// SOCKET LOGIC
+io.on('connection', function(socket) {
+    console.log('New connection');
+    socket.on('move', function(msg) {
+        socket.broadcast.emit('move', msg);
+        console.log(msg);
+    });
+})
+
+http.listen(3000, function(){
+    console.log('listening on *:3000');
 });
