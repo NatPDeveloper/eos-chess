@@ -38,6 +38,20 @@ ul {
     color: #665;
 }
 
+li {
+    background: white;
+    color: black;
+    list-style-type: none;
+    text-transform: uppercase;
+}
+
+li:nth-child(odd) {
+    background: black;
+    color: white;
+    list-style-type: none;
+    text-transform: uppercase;
+}
+
 .form-group {
     width: 400px;
     margin: 10px auto;

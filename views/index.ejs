@@ -23,8 +23,8 @@
             <div id="moves">
                     <h4>MOVES</h4>
                     <% moves.forEach(function(move){ %>
-                        <ul >
-                            <li id="move"><span><i class="fa fa-trash"></i></span><%= move.move %></li>
+                        <ul id="moves_ul">
+                            <!-- list populated from onDrop logic -->
                         </ul>
                     <% }) %>
                 </div>
@@ -68,6 +68,13 @@
                 socket.emit("move", move);
             }
             updateStatus();
+            console.log(move);
+
+            // ADDS LI TO MOVES LIST AFTER DROP EVENT
+            var list = document.getElementById('moves');
+            var entry = document.createElement('li');
+            entry.appendChild(document.createTextNode(move.piece + " " + move.from + " to " + move.to));
+            list.appendChild(entry);
         };
         // update the board position after the piece snap 
         // for castling, en passant, pawn promotion

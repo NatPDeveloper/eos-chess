@@ -52,15 +52,15 @@ function seedDB(){
             console.log(err);
         }
         console.log("removed moves!");
-        data.forEach(function(seed){
-            Move.create(seed, function(err, move){
-                if(err){
-                    console.log(err)
-                } else {
-                    console.log("added a move");
-                }; 
-            });
-        });
+        // data.forEach(function(seed){
+        //     Move.create(seed, function(err, move){
+        //         if(err){
+        //             console.log(err)
+        //         } else {
+        //             console.log("added a move");
+        //         }; 
+        //     });
+        // });
     });
 };
 
