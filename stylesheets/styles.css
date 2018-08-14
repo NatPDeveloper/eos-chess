@@ -43,6 +43,7 @@ li {
     color: black;
     list-style-type: none;
     text-transform: uppercase;
+    font-size: 16pt;
 }
 
 li:nth-child(odd) {
