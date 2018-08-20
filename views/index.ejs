@@ -32,10 +32,16 @@
     </div>
 
     <script>
-        
-
+    
         // SOCKETIO LOGIC        
         socket = io();
+        socket.emit('create', 'room1');
+        var room = "abc123";
+        socket.on('connect', function() {
+            // Connected, let's sign-up for to receive messages for this room
+            socket.emit('room', room);
+        });
+        
         socket.on('move',function (msg) {
             game.move(msg);
             board.position(game.fen());

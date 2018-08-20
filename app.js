@@ -7,6 +7,20 @@ var mongoose         = require("mongoose");
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+// USERS LIST
+var users = []
+
+// ROOM ID GENERATOR
+function generateRoomId() {
+    var result = "";
+    var length = 16; 
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-@";
+  
+    for (var i = 0; i < length; i++)
+      result += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return result;
+  }
 
 // APP CONFIG
 mongoose.connect("mongodb://localhost/chess_eos");
@@ -86,13 +100,25 @@ app.get("/", function(req, res) {
 
 // SOCKET LOGIC
 io.on('connection', function(socket) {
+    // once a client has connected, we expect to get a ping from them saying what room they want to join
+    socket.on('room', function(room) {
+        socket.join(room);
+    });
     console.log('New connection');
     socket.on('move', function(msg) {
-        socket.broadcast.emit('move', msg);
-        console.log(msg);
+        // PREV BROADCAST TO ALL ROOMS, NOW TO SPECIFIC ROOM
+        // socket.broadcast.emit('move', msg);
+        socket.broadcast.to(room).emit("move",msg);
+        console.log(room);
+        // console.log(msg);
         data.push(msg.to);
     });
+    socket.on('disconnect', function(){
+        console.log("user disconnected");
+     });
 })
+
+room = "abc123";
 
 http.listen(3000, function(){
     console.log('listening on *:3000');
