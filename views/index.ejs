@@ -32,11 +32,18 @@
     </div>
 
     <script>
+        
+
         // SOCKETIO LOGIC        
         socket = io();
         socket.on('move',function (msg) {
-                game.move(msg);
-                board.position(game.fen());
+            game.move(msg);
+            board.position(game.fen());
+            // ADDS LI TO MOVES LIST AFTER DROP EVENT
+            var list = document.getElementById('moves');
+            var entry = document.createElement('li');
+            entry.appendChild(document.createTextNode(msg.piece + " " + msg.from + " to " + msg.to));
+            list.appendChild(entry);
         })
         
         var board,
@@ -68,8 +75,8 @@
                 socket.emit("move", move);
             }
             updateStatus();
-            console.log(move);
-
+            // console.log(move);
+            
             // ADDS LI TO MOVES LIST AFTER DROP EVENT
             var list = document.getElementById('moves');
             var entry = document.createElement('li');
