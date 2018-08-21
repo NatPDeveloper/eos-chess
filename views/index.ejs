@@ -44,43 +44,24 @@
 
         // SOCKETIO LOGIC        
         socket = io();
-        // var room = "default";
-        // socket.on('connect', function() {
-        //     // Connected, let's sign-up for to receive messages for this room
-        //     socket.emit('room', room);
-        // });
 
         
         // submits room value from EOS account name box
         document.querySelector('#nameForm').addEventListener('submit', function (e) {
-            // e.preventDefault();
-            // var formInput = document.querySelector('#eosName');
-            // console.log(formInput.value);
-            // socket.emit('newRoom',formInput.value);
-            // TESTING
             e.preventDefault();
             var formInput = document.querySelector('#eosName');
             socket.emit("sendName",formInput.value);
             console.log(formInput.value);
-            // name.text(formInput.val());
-            // formInput.val('');
-            // formInput.hide();
             return false;
         });
         
         socket.on('roomId',function(roomId){
             room = roomId;
             console.log("set room to roomId " + room);
-            //showRoomId.text('Room ID : ' + room);
         })
 
         socket.on('sendMessage',function(message){
             console.log("hit send message" + message);
-            // var h1 = $('<h1/>').append($('<p/>',{
-            //     text:message,
-            //     class:"message sender-message"
-            // }))
-            // messages.append(h1);
         })
 
         socket.on("joinRequestFrom",function(socketId){
