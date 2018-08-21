@@ -18,14 +18,14 @@
                     <button id="submitButton" class="btn btn-lg btn-primary btn-block">Connect</button>
                 </div>
             </form>
-
+            <h4>MOVES</h4>
             <div id="moves">
-                    <h4>MOVES</h4>
-                    <% moves.forEach(function(move){ %>
-                        <ul id="moves_ul">
-                            <!-- list populated from onDrop logic -->
-                        </ul>
-                    <% }) %>
+                    
+                        <% moves.forEach(function(move){ %>
+                            <ul id="moves_ul" style="overflow: auto">
+                                <!-- list populated from onDrop logic -->
+                            </ul>
+                        <% }) %>
                 </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
             entry.setAttribute("class", "playerMoves");
             entry.className = "playerMoves";
             entry.appendChild(document.createTextNode(msg.piece + " " + msg.from + " to " + msg.to));
-            list.appendChild(entry);
+            list.prepend(entry);
             updateStatus();
         })
         
@@ -98,7 +98,7 @@
             var entry = document.createElement('li');
             entry.setAttribute("class", "playerMoves");
             entry.appendChild(document.createTextNode(move.piece + " " + move.from + " to " + move.to));
-            list.appendChild(entry);
+            list.prepend(entry);
         };
         // update the board position after the piece snap 
         // for castling, en passant, pawn promotion

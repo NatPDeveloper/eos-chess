@@ -27,6 +27,11 @@ h1 {
     margin: 0 auto;
 }
 
+#moves_ul {
+    overflow:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 h3 {
     background: white;
     color: black;
@@ -42,7 +47,7 @@ h4 {
     color: black;
     margin: 0;
     padding: 10px 20px;
-    width: 100%;
+    width: 400px;
     border-radius: 30px;
     font-weight: bold;
 }
@@ -68,7 +73,7 @@ li.playerMoves  {
     margin-top: 5px;
 }
 
- li:nth-of-type(even).playerMoves {
+ li:nth-last-of-type(even).playerMoves {
     background: black;
     color: white;
     list-style-type: none;
