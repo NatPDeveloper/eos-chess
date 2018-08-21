@@ -13,7 +13,7 @@ var users = []
 // ROOM ID GENERATOR
 function generateRoomId() {
     var result = "";
-    var length = 16; 
+    var length = 16; // changed from 16
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-@";
   
     for (var i = 0; i < length; i++)
@@ -26,6 +26,7 @@ function generateRoomId() {
 mongoose.connect("mongodb://localhost/chess_eos");
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({extended: true}));
 
 // MONGOOSE/MODEL CONFIG
 var moveSchema = new mongoose.Schema({
@@ -34,7 +35,13 @@ var moveSchema = new mongoose.Schema({
     created: {type: Date, default: Date.now()}
 });
 
+var hostSchema = new mongoose.Schema({
+    host: String,
+    created: {type: Date, default: Date.now()}
+});
+
 var Move = mongoose.model("Move", moveSchema);
+var Host = mongoose.model("Host", hostSchema);
 
 var data = [
     {
@@ -98,27 +105,40 @@ app.get("/", function(req, res) {
      });
 });
 
+app.post("/game", function(req, res){
+    var host = req.body.host;
+    console.log(host);
+})
+
+room = "default";
+
 // SOCKET LOGIC
 io.on('connection', function(socket) {
     // once a client has connected, we expect to get a ping from them saying what room they want to join
     socket.on('room', function(room) {
         socket.join(room);
+        console.log("connected to " + room);
     });
+
+    socket.on('newRoom', function(name) {
+        var room = generateRoomId();
+        users.push({name:name, room:room, id:socket.id});
+        socket.join(room);
+        console.log("connected to " + room);
+    })
+
     console.log('New connection');
     socket.on('move', function(msg) {
         // PREV BROADCAST TO ALL ROOMS, NOW TO SPECIFIC ROOM
         // socket.broadcast.emit('move', msg);
         socket.broadcast.to(room).emit("move",msg);
-        console.log(room);
-        // console.log(msg);
+        console.log("sending move to " + room);
         data.push(msg.to);
     });
     socket.on('disconnect', function(){
         console.log("user disconnected");
      });
 })
-
-room = "abc123";
 
 http.listen(3000, function(){
     console.log('listening on *:3000');

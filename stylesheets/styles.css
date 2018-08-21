@@ -1,14 +1,21 @@
 body {
-    padding-top: 20px;
-    background: orangered;  /* fallback for old browsers */
+    background: #2564ca;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #904e95, #e96443);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, orangered, rgb(19, 8, 184)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /*background: linear-gradient(to right, orangered, rgb(19, 8, 184));  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.container {
+    margin-top: 20px;
 }
 
 #name {
     width: 400px;
     margin: 0 auto;
     color: white;
+}
+
+#submitButton {
+    margin-top: 5px;
 }
 
 h1 {
@@ -20,6 +27,15 @@ h1 {
     margin: 0 auto;
 }
 
+h3 {
+    background: white;
+    color: black;
+    width: 400px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 h4 {
     background: black;
     color: white;
@@ -28,7 +44,7 @@ h4 {
     width: 100%;
 }
 
-ul {
+ul#moves {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -38,15 +54,16 @@ ul {
     color: #665;
 }
 
-li {
+li.playerMoves  {
     background: white;
     color: black;
     list-style-type: none;
     text-transform: uppercase;
     font-size: 16pt;
+    font-weight: bold;
 }
 
-li:nth-child(odd) {
+ li:nth-of-type(even).playerMoves {
     background: black;
     color: white;
     list-style-type: none;
