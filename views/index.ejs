@@ -135,6 +135,12 @@
             list.prepend(entry);
             updateStatus();            
         })
+
+        socket.on('opponentDisconnect',function(){
+            alert("Opponent left the room");
+            board.orientation('white');
+            board.start();
+        })
         
         var board,
             game = new Chess(),

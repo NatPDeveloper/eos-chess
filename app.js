@@ -206,6 +206,17 @@ io.on('connection', function(socket) {
         }
     
       }
+      socket.on('disconnect',disconnect)
+      function disconnect(){
+        for(var i =0;i<users.length;i++){
+          if(users[i].id == socket.id){
+            socket.broadcast.to(users[i].room).emit("opponentDisconnect");
+            users.splice(i,1);
+            break;
+          }
+        }
+    
+      }
 })
 
 http.listen(3000, function(){
