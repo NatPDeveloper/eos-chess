@@ -130,15 +130,16 @@
             pgnEl = $('#pgn');
         // do not pick up pieces if the game is over
         // only pick up pieces for the side to move
+        var color;
         var onDragStart = function(source, piece, position, orientation) {
-            if (game.game_over() === true ||
-                (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-                (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-            return false;
+            if ((orientation === 'white' && piece.search(/^w/) === -1) ||
+                (orientation === 'black' && piece.search(/^b/) === -1)) {
+                return false;
             }
         };
         var onDrop = function(source, target) {
             // see if the move is legal
+            var turn = game.turn();
             var move = game.move({
                 from: source,
                 to: target,
@@ -197,6 +198,7 @@
         };
         var cfg = {
             draggable: true,
+            showErrors: true,
             position: 'start',
             onDragStart: onDragStart,
             onDrop: onDrop,
