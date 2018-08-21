@@ -105,6 +105,10 @@ app.get("/", function(req, res) {
      });
 });
 
+app.get("/about", function(req, res){
+    res.render('about');
+});
+
 app.post("/game", function(req, res){
     var host = req.body.host;
     console.log(host);
