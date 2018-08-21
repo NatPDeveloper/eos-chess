@@ -36,33 +36,94 @@
     </div>
 
     <script>
-        
-        // submits room value from EOS account name box
-        document.querySelector('#nameForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            var formInput = document.querySelector('#eosName');
-            console.log(formInput.value);
-            socket.emit('newRoom',formInput.value);
-        });
-        
-        // submits room value from EOS account name box
-        document.querySelector('#hostForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            var formInput = document.querySelector('#hostName');
-            console.log(formInput.value);
-            socket.emit('room',formInput.value);
-        });
+        var game; // attach the game board and engine
+
+        var room; // testing
+
+        var board; // server sends opponent move to board
 
         // SOCKETIO LOGIC        
         socket = io();
-        var room = "default";
-        socket.on('connect', function() {
-            // Connected, let's sign-up for to receive messages for this room
-            socket.emit('room', room);
+        // var room = "default";
+        // socket.on('connect', function() {
+        //     // Connected, let's sign-up for to receive messages for this room
+        //     socket.emit('room', room);
+        // });
+
+        
+        // submits room value from EOS account name box
+        document.querySelector('#nameForm').addEventListener('submit', function (e) {
+            // e.preventDefault();
+            // var formInput = document.querySelector('#eosName');
+            // console.log(formInput.value);
+            // socket.emit('newRoom',formInput.value);
+            // TESTING
+            e.preventDefault();
+            var formInput = document.querySelector('#eosName');
+            socket.emit("sendName",formInput.value);
+            console.log(formInput.value);
+            // name.text(formInput.val());
+            // formInput.val('');
+            // formInput.hide();
+            return false;
         });
         
-        socket.on('move',function (msg) {
-            game.move(msg);
+        socket.on('roomId',function(roomId){
+            room = roomId;
+            console.log("set room to roomId " + room);
+            //showRoomId.text('Room ID : ' + room);
+        })
+
+        socket.on('sendMessage',function(message){
+            console.log("hit send message" + message);
+            // var h1 = $('<h1/>').append($('<p/>',{
+            //     text:message,
+            //     class:"message sender-message"
+            // }))
+            // messages.append(h1);
+        })
+
+        socket.on("joinRequestFrom",function(socketId){
+        console.log("join request from " + socketId);
+         var confirm = window.confirm("Join Request, Do you accept?");
+            if(confirm){
+                socket.emit("joinRequestAnswer","yes",socketId);
+                board.orientation('white');
+                board.start();
+            }
+        })
+        socket.on("newGameRequest",function(){
+            var confirm = window.confirm("You won! Opponent want to reset the game");
+            if(confirm){
+                socket.emit("newGame",room);
+            }
+        })
+        socket.on("newGame",function(){
+            board.start();
+            socket.emit("newGameRequest",room);
+        })
+        socket.on("joinRoom",function(newRoom,host){
+            window.alert("Joined room " + host);
+            room = newRoom;
+            socket.emit("joinRoom",room);
+            board.orientation('black');
+            board.start();
+        });
+
+        // submits room value from EOS account name box
+        document.querySelector('#hostForm').addEventListener('submit', function (e) {
+            
+            e.preventDefault();
+            if(room)
+                socket.emit("joinRequestTo",hostName.value);
+            else{
+                alert("You did not have a name");
+            }
+
+        });
+
+        socket.on('move',function(moveData){
+            game.move(moveData)
             board.position(game.fen());
             // ADDS LI TO MOVES LIST AFTER DROP EVENT
             var list = document.getElementById('moves');
@@ -70,9 +131,9 @@
             // entry.className = 'playerMoves';  #NOT DRY
             entry.setAttribute("class", "playerMoves");
             entry.className = "playerMoves";
-            entry.appendChild(document.createTextNode(msg.piece + " " + msg.from + " to " + msg.to));
+            entry.appendChild(document.createTextNode(moveData.piece + " " + moveData.from + " to " + moveData.to));
             list.prepend(entry);
-            updateStatus();
+            updateStatus();            
         })
         
         var board,
@@ -101,10 +162,9 @@
                 return 'snapback';
             } else {
                 //Client sends a "move" message with move data    
-                socket.emit("move", move);
+                socket.emit("move",room,move);
             }
             updateStatus();
-            // console.log(move);
             
             // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
             var list = document.getElementById('moves');

@@ -122,34 +122,90 @@ app.post("/game", function(req, res){
     console.log(host);
 })
 
-room = "default";
+// room = "default";
 
 // SOCKET LOGIC
 io.on('connection', function(socket) {
-    // once a client has connected, we expect to get a ping from them saying what room they want to join
-    socket.on('room', function(room) {
-        socket.join(room);
-        console.log("connected to " + room);
-    });
+    socket.on('move', broadcastMove);
+     function broadcastMove(room, moveData){
+        socket.broadcast.to(room).emit("move",moveData);
+      }
+     socket.on('sendName',sendName)
+     function sendName(name){
+        var isNameValid = true;
+        for(var i=0;i<users.length;i++){
+          if(users[i].name===name){
+            isNameValid = false;
+            socket.emit('nameError','Name is already existed, Try again');
+            return;
+          }
+        } if(isNameValid){
+            var room = generateRoomId();
+            users.push({id:socket.id, name:name, room:room});
+            socket.join(room);
+            socket.emit("roomId",room);
+          } 
+        }
+    socket.on("joinRoom",joinRoom);
+    function joinRoom(room){
+        console.log("joined room " + room);
+        socket.broadcast.to(room).emit("sendMessage","SERVER : a user just joined");
+        if(room){
+          socket.join(room);
+          console.log(room);
+        //   users.filter(user=>user.id == socket.id)[0].room = room;
+        for(var i = 0; i < users.length; i++){
+            if(users[i].id == socket.id){
+                users[i].room = room;
+            } else {
+                console.log("no match");
+            }
+        }
+      }
+    }
 
-    socket.on('newRoom', function(name) {
-        var room = generateRoomId();
-        users.push({name:name, room:room, id:socket.id});
-        socket.join(room);
-        console.log("connected to " + room);
-    })
+      socket.on("joinRequestTo",joinRequestTo)
+      function joinRequestTo(name){
+        console.log('sendRequest to ' + name);
+        for(var i=0;i<users.length;i++){
+          if(users[i].name===name){
+            socket.broadcast.to(users[i].room).emit("joinRequestFrom",socket.id);
+            break;
+          }
+        }
+      }
 
-    console.log('New connection');
-    socket.on('move', function(msg) {
-        // PREV BROADCAST TO ALL ROOMS, NOW TO SPECIFIC ROOM
-        // socket.broadcast.emit('move', msg);
-        socket.broadcast.to(room).emit("move",msg);
-        console.log("sending move to " + room);
-        data.push(msg.to);
-    });
-    socket.on('disconnect', function(){
-        console.log("user disconnected");
-     });
+      socket.on('newGame',newGame);
+      function newGame(room){
+        io.to(room).emit("newGame");
+      }
+
+      socket.on('newGameRequest',newGameRequest);
+      function newGameRequest(room){
+        if(room)
+          socket.broadcast.to(room).emit("newGameRequest");
+      }
+
+      socket.on('joinRequestAnswer',joinRequestAnswer)
+      function joinRequestAnswer(answer,socketId){
+        var user = users.filter(user=>user.id == socket.id)[0];
+    
+        if(answer=="yes"){
+          socket.to(socketId).emit("joinRoom",user.room, user.name);
+        }
+      }
+
+      socket.on('disconnect',disconnect)
+      function disconnect(){
+        for(var i =0;i<users.length;i++){
+          if(users[i].id == socket.id){
+            socket.broadcast.to(users[i].room).emit("opponentDisconnect");
+            users.splice(i,1);
+            break;
+          }
+        }
+    
+      }
 })
 
 http.listen(3000, function(){
