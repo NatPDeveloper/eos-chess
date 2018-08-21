@@ -9,6 +9,7 @@
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
         <script src="./js/chessboard-0.3.0.min.js"></script>
         <script src="./js/chess.js"></script>
+        <script src="./js/stockfish.js"></script>
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
@@ -19,12 +20,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/engine">Engine</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/stats">Stats</a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">

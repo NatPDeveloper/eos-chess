@@ -109,6 +109,14 @@ app.get("/about", function(req, res){
     res.render('about');
 });
 
+app.get("/engine", function(req, res){
+    res.render('engine');
+});
+
+app.get("/stats", function(req, res){
+    res.render('stats');
+});
+
 app.post("/game", function(req, res){
     var host = req.body.host;
     console.log(host);

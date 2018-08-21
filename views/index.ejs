@@ -14,7 +14,13 @@
             <h3><span id="status"></span></h3>
             <form id="nameForm" method="">
                 <div class="form-group">
-                    <input class="form-control" id="hostName" type="text" name="name" placeholder="enter the host's EOS account name">
+                    <input class="form-control" id="eosName" type="text" name="name" placeholder="enter your EOS account name">
+                    <button id="submitButton" class="btn btn-lg btn-primary btn-block">Connect</button>
+                </div>
+            </form>
+            <form id="hostForm" method="">
+                <div class="form-group">
+                    <input class="form-control" id="hostName" type="text" name="host" placeholder="enter the host's EOS account name">
                     <button id="submitButton" class="btn btn-lg btn-primary btn-block">Connect</button>
                 </div>
             </form>
@@ -34,9 +40,17 @@
         // submits room value from EOS account name box
         document.querySelector('#nameForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            var formInput = document.querySelector('#hostName');
+            var formInput = document.querySelector('#eosName');
             console.log(formInput.value);
             socket.emit('newRoom',formInput.value);
+        });
+        
+        // submits room value from EOS account name box
+        document.querySelector('#hostForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var formInput = document.querySelector('#hostName');
+            console.log(formInput.value);
+            socket.emit('room',formInput.value);
         });
 
         // SOCKETIO LOGIC        
