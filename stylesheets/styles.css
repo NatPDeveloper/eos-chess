@@ -25,12 +25,25 @@ h1 {
 #moves {
     width: 400px;
     margin: 0 auto;
+    height: 500px;
+    overflow: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-#moves_ul {
-    overflow:scroll;
-    -webkit-overflow-scrolling: touch;
+/* Custom ScrollBar */
+#moves::-webkit-scrollbar {
+    width: 15px;
 }
+#moves::-webkit-scrollbar-track {
+    background-color: #000000;
+} 
+#moves::-webkit-scrollbar-thumb {
+    background-color: white;
+} 
+#moves::-webkit-scrollbar-corner {
+    background-color: white;
+} 
 
 h3 {
     background: white;
@@ -60,6 +73,8 @@ ul#moves {
     height: 40px;
     line-height: 40px;
     color: #665;
+    max-height: 500px;
+    overflow: auto;
 }
 
 li.playerMoves  {
