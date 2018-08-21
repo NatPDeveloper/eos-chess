@@ -204,7 +204,6 @@ io.on('connection', function(socket) {
             break;
           }
         }
-    
       }
 })
 
