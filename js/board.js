@@ -1,11 +1,11 @@
 function Board(){
-    var socket;
+    var socket= io();;
     var chess = Chess();
     var chessEngine;
     var color;
 
     var isStockfishOn = true; // true until a player connects;
-    
+    // var statusEl = $('#status');
     var onDragStart = function(source, piece, position, orientation) {
         if(chess.in_checkmate()){
             var confirm = window.confirm("You Lost! Reset the game?");
@@ -29,22 +29,43 @@ function Board(){
         var turn = chess.turn();
         var move = chess.move({
             from: source,
-            to: target,
-            //promotion: document.getElementById("promote").value
+            to: target
         });
 
         // illegal move
         if (move === null) return 'snapback';
-        updateStatus();
         //player just end turn, CPU starts searching after a second
         if(isStockfishOn)
             window.setTimeout(chessEngine.prepareAiMove(),500);
         else { 
             socket.sendMove(turn, move.from, move.to);
+            if(move.color == "w"){
+                document.querySelector("h3").style.backgroundColor = "black";
+                document.querySelector("h3").style.color = "white";
+                document.querySelector("h3").innerHTML = "BLACK TO MOVE"
+                console.log("changed to black LOCALLY");
+            } else if(move.color == "b") {
+                document.querySelector("h3").style.backgroundColor = "white";
+                document.querySelector("h3").style.color = "black";
+                document.querySelector("h3").innerHTML = "WHITE TO MOVE"
+                console.log("changed to white LOCALLY");
+            } else {
+                console.log("not needed");
+            }
         }
+        // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
+        var list = document.getElementById('moves');
+        var entry = document.createElement('li');
+        entry.setAttribute("class", "playerMoves");
+        entry.appendChild(document.createTextNode(move.from + " to " + move.to));
+        list.prepend(entry);
+        
     };
 
     var updateStatus= function(){
+        var status = "";
+        var moveColor = "White";
+        
         var status = "";
         var moveColor = "White";
         if(chess.turn()=='b'){   
@@ -58,14 +79,23 @@ function Board(){
                 board.start();
             }
             return; 
-        } else if(chess.in_draw()){
-            status = "Game Over, Drawn";
-            window.alert(status);
-            return;
+            } else if(chess.in_draw()){
+                status = "Game Over, Drawn";
+                window.alert(status);
+                return;
+            } else {
+                status = moveColor + ' to move';
+                // check?
+                if (chess.in_check() === true) {
+                    status += ', ' + moveColor + ' is in check';
+            }
+        
         }
-
-    }
+        // statusEl.html(status);
     
+    };
+    
+    updateStatus();
     var cfg = {
         showErrors: true,
         draggable: true,
@@ -75,7 +105,6 @@ function Board(){
     };
 
     var board = new ChessBoard('board', cfg);
-
     return {
         competingHuman:function(){
             isStockfishOn=false;
@@ -96,6 +125,10 @@ function Board(){
             return chess.history({verbose:true});
         }, getPgn:function(){
             return chess.pgn();
+        }, getPos:function(pos){
+            var a = chess.get(pos.type);
+            console.log(a);
+            return a;
         }, getFen:function(){
             return chess.fen();
         }, getTurn:function(){

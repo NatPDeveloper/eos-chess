@@ -1,5 +1,6 @@
 function EngineGame(options){
     var board = Board();
+
     var stockFish = new Worker('../js/stockfish.js');
 
     var engine = stockFish;
@@ -61,6 +62,8 @@ function EngineGame(options){
             //start searching, if depth exists, use depth paramter, else let the engine use default
             uciCmd('go '+(time.depth?'depth ' +time.depth:''));
         }
+        // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
+        
     }
 
     engine.onmessage = function(event){
@@ -79,7 +82,12 @@ function EngineGame(options){
                 } else if(match[4]=="#"){ // player lose,  game over
 //                    window.alert("Game Over! You lose :)");
                 }
-                board.makeMove(match[1],match[2],match[3]);
+                var list = document.getElementById('moves');
+                var entry = document.createElement('li');
+                entry.setAttribute("class", "playerMoves");
+                entry.appendChild(document.createTextNode(match[1] + " to " + match[2]));
+                list.prepend(entry)
+                board.makeMove(match[1],match[2],match[3]);;
 
                 //window.setTimeOut(updateStatus,200);
                 prepareMove();

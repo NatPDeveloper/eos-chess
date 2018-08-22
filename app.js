@@ -94,7 +94,7 @@ app.use("/img/chesspieces/wikipedia", express.static(__dirname + '/img/chesspiec
 app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
 app.use("/node_modules", express.static(__dirname + '/node_modules'));
 
-// INDEX ROUTE
+// ROUTES
 app.get("/", function(req, res) {
     Move.find({}, function(err, allMoves){
         if(err){
@@ -107,10 +107,6 @@ app.get("/", function(req, res) {
 
 app.get("/about", function(req, res){
     res.render('about');
-});
-
-app.get("/engine", function(req, res){
-    res.render('engine');
 });
 
 app.get("/stats", function(req, res){
@@ -129,6 +125,8 @@ io.on('connection', function(socket) {
     socket.on('move', broadcastMove);
      function broadcastMove(room, moveData){
         socket.broadcast.to(room).emit("move",moveData);
+        socket.broadcast.to(room).emit("changeColor",moveData);
+        console.log(moveData.color);
       }
      socket.on('sendName',sendName)
      function sendName(name){

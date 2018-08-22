@@ -1,17 +1,16 @@
 <% include ./partials/header %>
-
 <div  align="center" class="container" id="main"> 
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-7">
             <h1>Welcome to ChessEOS</h1>
             <div id="board" style="width: 600px"></div>
             <!-- <p>FEN: <span id="fen"></span></p>
             <p>PGN: <span id="pgn"></span></p>
             <input type="button" id="getPositionBtn" value="Show position in console" /> -->
         </div>
-        <div id="move" class="col-6">
-            <h3><span id="status"></span></h3>
+        <div id="move" class="col-5">
+            <h3><span id="status">WHITE TO MOVE</span></h3>
             <form id="nameForm" method="">
                 <div class="form-group">
                     <input class="form-control" id="eosName" type="text" name="name" placeholder="enter your EOS account name">
@@ -35,208 +34,31 @@
         </div>
     </div>
 
+    
     <script>
-        var game; // attach the game board and engine
 
-        var room; // testing
+        var newGame;
+var socket;
+var engine;
+var board;
+var init = function(){
+    engine = EngineGame();
+    socket = SocketClient();
 
-        var board; // server sends opponent move to board
-
-//         var engine = EngineGame();
-// board = Board();
-// board.setChessEngine(engine);
-// engine.setBoard(board);
-//         engine.reset();
-//         engine.setDepth();
-//         engine.setPlayerColor("white");
-//         engine.start();
-
-        // SOCKETIO LOGIC        
-        socket = io();
-
-        
-        // submits room value from EOS account name box
-        document.querySelector('#nameForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            var formInput = document.querySelector('#eosName');
-            socket.emit("sendName",formInput.value);
-            console.log(formInput.value);
-            return false;
-        });
-        
-        socket.on('roomId',function(roomId){
-            room = roomId;
-            console.log("set room to roomId " + room);
-        })
-
-        socket.on('sendMessage',function(message){
-            console.log("hit send message" + message);
-        })
-
-        socket.on("joinRequestFrom",function(socketId){
-        console.log("join request from " + socketId);
-         var confirm = window.confirm("Join Request, Do you accept?");
-            if(confirm){
-                socket.emit("joinRequestAnswer","yes",socketId);
-                board.orientation('white');
-                board.start();
-            }
-
-        //     if(board.isCompetingCpu()){
-        //     var confirm = window.confirm("Join Request, Do you accept?");
-        //     if(confirm){
-        //         socket.emit("joinRequestAnswer","yes",socketId);
-        //         board.setOrientation('white');
-        //         // board.competingHuman();
-        //         board.reset();
-        //     }
-            
-        // } else {
-        //     socket.emit("joinRequestAnswer","no",socketId);
-        // }
-        })
-        socket.on("newGameRequest",function(){
-            var confirm = window.confirm("You won! Opponent want to reset the game");
-            if(confirm){
-                socket.emit("newGame",room);
-            }
-        })
-        socket.on("newGame",function(){
-            board.start();
-            socket.emit("newGameRequest",room);
-        })
-        socket.on("joinRoom",function(newRoom,host){
-            window.alert("Joined room " + host);
-            room = newRoom;
-            socket.emit("joinRoom",room);
-            board.orientation('black');
-            board.start();
-            // board.competingHuman();
-        });
-
-        // submits room value from EOS account name box
-        document.querySelector('#hostForm').addEventListener('submit', function (e) {
-            
-            e.preventDefault();
-            if(room)
-                socket.emit("joinRequestTo",hostName.value);
-            else{
-                alert("You did not have a name");
-            }
-
-        });
-
-        socket.on('move',function(moveData){
-            game.move(moveData)
-            board.position(game.fen());
-            // ADDS LI TO MOVES LIST AFTER DROP EVENT
-            var list = document.getElementById('moves');
-            var entry = document.createElement('li');
-            // entry.className = 'playerMoves';  #NOT DRY
-            entry.setAttribute("class", "playerMoves");
-            entry.className = "playerMoves";
-            entry.appendChild(document.createTextNode(moveData.piece + " " + moveData.from + " to " + moveData.to));
-            list.prepend(entry);
-            updateStatus();            
-        })
-
-        socket.on('opponentDisconnect',function(){
-            alert("Opponent left the room");
-            board.orientation('white');
-            board.start();
-            // board.competingCpu();
-        })
-        
-        var board,
-            game = new Chess(),
-            statusEl = $('#status'),
-            fenEl = $('#fen'),
-            pgnEl = $('#pgn');
-        // do not pick up pieces if the game is over
-        // only pick up pieces for the side to move
-        var color;
-        var onDragStart = function(source, piece, position, orientation) {
-            if ((orientation === 'white' && piece.search(/^w/) === -1) ||
-                (orientation === 'black' && piece.search(/^b/) === -1)) {
-                return false;
-            }
-        };
-        var onDrop = function(source, target) {
-            // see if the move is legal
-            var turn = game.turn();
-            var move = game.move({
-                from: source,
-                to: target,
-                promotion: 'q' // NOTE: always promote to a queen for example simplicity
-            });
-            // illegal move
-            if (move === null){
-                return 'snapback';
-            } else {
-                //Client sends a "move" message with move data    
-                socket.emit("move",room,move);
-            }
-            updateStatus();
-            
-            // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
-            var list = document.getElementById('moves');
-            var entry = document.createElement('li');
-            entry.setAttribute("class", "playerMoves");
-            entry.appendChild(document.createTextNode(move.piece + " " + move.from + " to " + move.to));
-            list.prepend(entry);
-        };
-        // update the board position after the piece snap 
-        // for castling, en passant, pawn promotion
-        var onSnapEnd = function() {
-            board.position(game.fen());
-        };
-        var updateStatus = function() {
-            var status = '';
-            var moveColor = 'White';
-            document.querySelector("h3").style.backgroundColor = "white";
-            document.querySelector("h3").style.color = "black";
-            if (game.turn() === 'b') {
-                moveColor = 'Black';
-                document.querySelector("h3").style.backgroundColor = "black";
-                document.querySelector("h3").style.color = "white";
-            }
-            // checkmate?
-            if (game.in_checkmate() === true) {
-                status = 'Game over, ' + moveColor + ' is in checkmate.';
-            }
-            // draw?
-            else if (game.in_draw() === true) {
-                status = 'Game over, drawn position';
-            }
-            // game still on
-            else {
-            status = moveColor + ' to move';
-            // check?
-            if (game.in_check() === true) {
-                status += ', ' + moveColor + ' is in check';
-            }
-            }
-            statusEl.html(status);
-            fenEl.html(game.fen());
-            pgnEl.html(game.pgn());
-        };
-        var cfg = {
-            draggable: true,
-            showErrors: true,
-            position: 'start',
-            onDragStart: onDragStart,
-            onDrop: onDrop,
-            onSnapEnd: onSnapEnd
-        };
-        board = ChessBoard('board', cfg);
-        function clickGetPositionBtn() {
-            console.log("Current position as an Object:");
-            console.log(board.position());
-            console.log("Current position as a FEN string:");
-            console.log(board.fen());
-        }
-        $('#getPositionBtn').on('click', clickGetPositionBtn);
-        updateStatus();
+    board = Board();
+    board.setChessEngine(engine);
+    board.setSocket(socket);
+    newGame = function(){
+        engine.setBoard(board);
+        engine.reset();
+        engine.setDepth();
+        engine.setPlayerColor("white");
+        engine.start();
+    }
+    socket.setBoard(board);
+    newGame();
+}
+init()
     </script>
 </div>
 
