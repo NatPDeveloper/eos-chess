@@ -12,10 +12,11 @@ function SocketClient(){
         engine.setDepth();
         engine.setPlayerColor("white");
         engine.start();
+        var list = document.getElementById('moves');
+        var entry = document.createElement('li');
 
         // // // SOCKETIO LOGIC        
         socket = io();
-
         
         // submits room value from EOS account name box
         document.querySelector('#nameForm').addEventListener('submit', function (e) {
@@ -49,6 +50,10 @@ function SocketClient(){
             } else {
                 socket.emit("joinRequestAnswer","no",socketId);
             }
+            
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
+            }
         })
 
         socket.on("newGameRequest",function(){
@@ -68,6 +73,9 @@ function SocketClient(){
             board.setOrientation('black');
             board.startBoard();
             board.competingHuman();
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
+            }
         });
 
         // submits room value from EOS account name box
@@ -97,11 +105,10 @@ function SocketClient(){
                 console.log("not needed");
             }
         })
-
+        
         socket.on('move',function(moveData){
             // ADDS LI TO MOVES LIST AFTER DROP EVENT
-            var list = document.getElementById('moves');
-            var entry = document.createElement('li');
+            
             // entry.className = 'playerMoves';  #NOT DRY
             entry.setAttribute("class", "playerMoves");
             entry.className = "playerMoves";
@@ -122,6 +129,7 @@ function SocketClient(){
             board.setOrientation('white');
             board.start();
             board.competingCpu();
+            
         })
         return {
             setBoard:function(newBoard){
