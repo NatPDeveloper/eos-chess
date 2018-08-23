@@ -51,6 +51,15 @@ function Scatter(){
     return {
         logout:function(){
             scatter.forgetIdentity();
+        },
+        getIdentityScatter:function(){
+            if (scatter.identity) {
+                const user = {
+                    eosAccount: scatter.identity.accounts[0].name,
+                    publicKey: scatter.identity.publicKey
+                }
+            return user;
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 function SocketClient(){
-    
+    // change to SocketClient.js instead of main
     var game; // attach the game board and engine
     var room; // testing
     var socket = io.connect();   
@@ -128,6 +128,9 @@ function SocketClient(){
             while( list.firstChild ){
                 list.removeChild( list.firstChild );
             }
+            document.querySelector("h3").style.backgroundColor = "white";
+            document.querySelector("h3").style.color = "black";
+            document.querySelector("h3").innerHTML = "WHITE TO MOVE"
         })
         return {
             setBoard:function(newBoard){
