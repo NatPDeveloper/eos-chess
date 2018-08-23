@@ -7,7 +7,8 @@ const Eos = require('eosjs');
 config = {
     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f', // 32 byte (64 char) hex string
     keyProvider: ['5J6oSzZkZK7PLpUavCv6VDBtL29PmdnMcxhRSmXnUaxqA6u3MSw'], // WIF string or array of keys..
-    httpEndpoint: 'http://127.0.0.1:8888'
+    httpEndpoint: 'http://127.0.0.1:8888',
+    authorization: 'test@active'
     // expireInSeconds: 60,
     // broadcast: true,
     // verbose: false, // API activity
@@ -131,9 +132,15 @@ io.on('connection', function(socket) {
         socket.broadcast.to(room).emit("move",moveData);
         socket.broadcast.to(room).emit("changeColor",moveData);
         console.log(moveData.color);
-        const eos = Eos(config).getInfo((error, info) => {
-            console.log(error, info);
-        });
+        // const eos = Eos(config).getInfo((error, info) => {
+        //     console.log(error, info);
+        // });
+        const eos = Eos(config);
+        eos.contract('eosio', (error, eosio) => { // or .then(
+            console.log(Object.keys(eosio))
+            eosio.getplayer('test')
+        })
+
       }
      socket.on('sendName',sendName)
      function sendName(name){
