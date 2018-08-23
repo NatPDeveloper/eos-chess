@@ -32,7 +32,7 @@ function generateRoomId() {
       result += possible.charAt(Math.floor(Math.random() * possible.length));
   
     return result;
-  }
+}
 
 // APP CONFIG
 mongoose.connect("mongodb://localhost/chess_eos");
@@ -128,7 +128,7 @@ app.get("/stats", function(req, res){
 // SOCKET LOGIC
 io.on('connection', function(socket) {
     socket.on('move', broadcastMove);
-     function broadcastMove(room, moveData){
+    function broadcastMove(room, moveData){
         socket.broadcast.to(room).emit("move",moveData);
         socket.broadcast.to(room).emit("changeColor",moveData);
         console.log(moveData.color);
@@ -140,31 +140,31 @@ io.on('connection', function(socket) {
             console.log(Object.keys(eosio))
             eosio.getplayer('test')
         })
-
       }
-     socket.on('sendName',sendName)
-     function sendName(name){
+    socket.on('sendName',sendName)
+    function sendName(name){
         var isNameValid = true;
         for(var i=0;i<users.length;i++){
-          if(users[i].name===name){
-            isNameValid = false;
-            socket.emit('nameError','Name is already existed, Try again');
-            return;
-          }
-        } if(isNameValid){
+            if(users[i].name===name){
+                isNameValid = false;
+                socket.emit('nameError','Name is already existed, Try again');
+                return;
+            }
+        } 
+        if(isNameValid){
             var room = generateRoomId();
             users.push({id:socket.id, name:name, room:room});
             socket.join(room);
             socket.emit("roomId",room);
-          } 
-        }
+        } 
+    }
     socket.on("joinRoom",joinRoom);
     function joinRoom(room){
         console.log("joined room " + room);
         socket.broadcast.to(room).emit("sendMessage","SERVER : a user just joined");
         if(room){
-          socket.join(room);
-          console.log(room);
+            socket.join(room);
+            console.log(room);
         //   users.filter(user=>user.id == socket.id)[0].room = room;
         for(var i = 0; i < users.length; i++){
             if(users[i].id == socket.id){
@@ -176,48 +176,47 @@ io.on('connection', function(socket) {
       }
     }
 
-      socket.on("joinRequestTo",joinRequestTo)
-      function joinRequestTo(name){
+    socket.on("joinRequestTo",joinRequestTo)
+    function joinRequestTo(name){
         console.log('sendRequest to ' + name);
         for(var i=0;i<users.length;i++){
-          if(users[i].name===name){
-            socket.broadcast.to(users[i].room).emit("joinRequestFrom",socket.id);
-            break;
-          }
+            if(users[i].name===name){
+                socket.broadcast.to(users[i].room).emit("joinRequestFrom",socket.id);
+                break;
+            }
         }
-      }
+    }
 
-      socket.on('newGame',newGame);
-      function newGame(room){
+    socket.on('newGame',newGame);
+    function newGame(room){
         io.to(room).emit("newGame");
-      }
+    }
 
-      socket.on('newGameRequest',newGameRequest);
-      function newGameRequest(room){
+    socket.on('newGameRequest',newGameRequest);
+    function newGameRequest(room){
         if(room)
-          socket.broadcast.to(room).emit("newGameRequest");
-      }
+            socket.broadcast.to(room).emit("newGameRequest");
+    }
 
-      socket.on('joinRequestAnswer',joinRequestAnswer)
-      function joinRequestAnswer(answer,socketId){
+    socket.on('joinRequestAnswer',joinRequestAnswer)
+    function joinRequestAnswer(answer,socketId){
         var user = users.filter(user=>user.id == socket.id)[0];
-    
-        if(answer=="yes"){
-          socket.to(socketId).emit("joinRoom",user.room, user.name);
-        }
-      }
 
-      socket.on('disconnect',disconnect)
-      function disconnect(){
-        for(var i =0;i<users.length;i++){
-          if(users[i].id == socket.id){
-            socket.broadcast.to(users[i].room).emit("opponentDisconnect");
-            users.splice(i,1);
-            break;
-          }
+        if(answer=="yes"){
+            socket.to(socketId).emit("joinRoom",user.room, user.name);
         }
-        // 
-      }
+    }
+
+    socket.on('disconnect',disconnect)
+    function disconnect(){
+        for(var i =0;i<users.length;i++){
+            if(users[i].id == socket.id){
+                socket.broadcast.to(users[i].room).emit("opponentDisconnect");
+                users.splice(i,1);
+                break;
+            }
+        }
+    }
 })
 
 http.listen(3000, function(){
