@@ -3,6 +3,7 @@ function Board(){
     var chess = Chess();
     var chessEngine;
     var color;
+    var scatter = Scatter();
 
     var isStockfishOn = true; // true until a player connects;
     // var statusEl = $('#status');
@@ -59,6 +60,9 @@ function Board(){
         entry.setAttribute("class", "playerMoves");
         entry.appendChild(document.createTextNode(move.from + " to " + move.to));
         list.prepend(entry);
+
+        var scatterMove = move.from + " to " + move.to;
+        scatter.setMove(scatterMove)
     };
 
     var updateStatus= function(){

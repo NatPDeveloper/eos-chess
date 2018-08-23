@@ -50,21 +50,55 @@ function Scatter(){
     
     // SCATTER TEST
     document.getElementById("scatterTest").addEventListener('click', function() {
+        const scatter = window.scatter;
+        window.scatter = null;
         const eos = scatter.eos( network, Eos );
-        const options = { authorization: [{ actor:scatter.identity.accounts[0].name, permission: scatter.identity.accounts[0].authority }] }
-        console.log(scatter.identity.accounts)
-        eos.contract('eosio').then(contract => { // or .then(
-            console.log(Object.keys(contract))
-            contract.getplayer('test', (scatter.identity.accounts[0].name, options))
+        const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
+        const options = { authorization: [{ actor:account.name, permission: account.authority }] }
+        eos.contract('eosio').then(contract => {
+            contract.getmoves(account.name, options)
         })
     })
+
+    function appTransaction(action, data){
+        if (scatter.identity) {
+        
+            const user = {
+                eosAccount: scatter.identity.accounts[0].name,
+                publicKey: scatter.identity.publicKey
+            }
+            const eos = scatter.eos( network, Eos );
+            const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
+            const options = { authorization: [{ actor:account.name, permission: account.authority }] }
+            eos.contract('eosio').then(contract => {
+                contract.setmove(account.name, data, options)
+            })
+        } else {
+            const scatter = window.scatter;
+            window.scatter = null;
+            const eos = scatter.eos( network, Eos );
+            const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
+            const options = { authorization: [{ actor:account.name, permission: account.authority }] }
+            eos.contract('eosio').then(contract => {
+                contract.setmove(account.name, data, options)
+            })
+        }
+    }
 
     return {
         // logout:function(){
         //     scatter.forgetIdentity();
         // },
-        getIdentityScatter:function(){
-            return scatter.eos( network, Eos );
+        addPlayer:function(player){
+            return appTransaction("addplayer");
+        },getPlayer:function(){
+            return appTransaction("getplayer");
+        }, update:function(player, newPlayerName){
+            return appTransaction("update");
+        }, setMove:function(move){
+            return appTransaction("setmove", move);
+        }, getMoves:function(){
+            return appTransaction("getmoves");
         }
     }
 }
