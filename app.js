@@ -25,7 +25,7 @@ var users = []
 // ROOM ID GENERATOR
 function generateRoomId() {
     var result = "";
-    var length = 16; // changed from 16
+    var length = 16;
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-@";
   
     for (var i = 0; i < length; i++)
@@ -132,15 +132,12 @@ io.on('connection', function(socket) {
         socket.broadcast.to(room).emit("move",moveData);
         socket.broadcast.to(room).emit("changeColor",moveData);
         console.log(moveData.color);
-        // const eos = Eos(config).getInfo((error, info) => {
-        //     console.log(error, info);
-        // });
-        const eos = Eos(config);
-        eos.contract('eosio', (error, eosio) => { // or .then(
-            console.log(Object.keys(eosio))
-            eosio.getplayer('test')
-        })
-      }
+        // const eos = Eos(config);
+        // eos.contract('eosio', (error, eosio) => { // or .then(
+        //     console.log(Object.keys(eosio))
+        //     eosio.getplayer('test')
+        // })
+    }
     socket.on('sendName',sendName)
     function sendName(name){
         var isNameValid = true;
@@ -165,15 +162,14 @@ io.on('connection', function(socket) {
         if(room){
             socket.join(room);
             console.log(room);
-        //   users.filter(user=>user.id == socket.id)[0].room = room;
-        for(var i = 0; i < users.length; i++){
-            if(users[i].id == socket.id){
-                users[i].room = room;
-            } else {
-                console.log("no match");
+            for(var i = 0; i < users.length; i++){
+                if(users[i].id == socket.id){
+                    users[i].room = room;
+                } else {
+                    console.log("no match");
+                }
             }
         }
-      }
     }
 
     socket.on("joinRequestTo",joinRequestTo)

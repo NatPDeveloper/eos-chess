@@ -11,16 +11,14 @@ function Scatter(){
         blockchain: 'eos',
         host: CHAIN_HOST,
         port: CHAIN_PORT,
-        chainId: CHAIN_ID
+        chainId: CHAIN_ID,
+        broadcast: true,
+        sign: true
     }
     
     document.getElementById("scatterLogin").addEventListener('click', scatterExtension => {
         const scatter = window.scatter;
         window.scatter = null;
-        // Or even better, because you most likely already have a network defined somewhere..
-        const requiredFields = {
-            accounts:[ network ]
-        };
 
         scatter.getIdentity({
             accounts:[network]
@@ -41,25 +39,32 @@ function Scatter(){
                 eosAccount: scatter.identity.accounts[0].name,
                 publicKey: scatter.identity.publicKey
             }
-        
         }
     })
+    
+   
     document.getElementById("scatterLogout").addEventListener('click', function() {
         scatter.forgetIdentity();
         alert("logged out of scatter");
     })
+    
+    // SCATTER TEST
+    document.getElementById("scatterTest").addEventListener('click', function() {
+        const eos = scatter.eos( network, Eos );
+        const options = { authorization: [{ actor:scatter.identity.accounts[0].name, permission: scatter.identity.accounts[0].authority }] }
+        console.log(scatter.identity.accounts)
+        eos.contract('eosio').then(contract => { // or .then(
+            console.log(Object.keys(contract))
+            contract.getplayer('test', (scatter.identity.accounts[0].name, options))
+        })
+    })
+
     return {
-        logout:function(){
-            scatter.forgetIdentity();
-        },
+        // logout:function(){
+        //     scatter.forgetIdentity();
+        // },
         getIdentityScatter:function(){
-            if (scatter.identity) {
-                const user = {
-                    eosAccount: scatter.identity.accounts[0].name,
-                    publicKey: scatter.identity.publicKey
-                }
-            return user;
-            }
+            return scatter.eos( network, Eos );
         }
     }
 }
