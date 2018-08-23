@@ -1,8 +1,7 @@
 function SocketClient(){
+    
     var game; // attach the game board and engine
-
     var room; // testing
-
     var socket = io.connect();   
     var engineGame;
         board = Board();
@@ -46,7 +45,6 @@ function SocketClient(){
                     board.competingHuman();
                     board.reset();
                 }
-                
             } else {
                 socket.emit("joinRequestAnswer","no",socketId);
             }
@@ -69,6 +67,7 @@ function SocketClient(){
         socket.on("joinRoom",function(newRoom,host){
             window.alert("Joined room " + host);
             room = newRoom;
+            board.reset();
             socket.emit("joinRoom",room);
             board.setOrientation('black');
             board.startBoard();
@@ -80,14 +79,12 @@ function SocketClient(){
 
         // submits room value from EOS account name box
         document.querySelector('#hostForm').addEventListener('submit', function (e) {
-            
             e.preventDefault();
             if(room)
                 socket.emit("joinRequestTo",hostName.value);
             else{
                 alert("You did not have a name");
             }
-
         });
         socket.on("changeColor",function(moveData){
             console.log("this is the moveData " + moveData.color);
@@ -107,10 +104,9 @@ function SocketClient(){
         })
         
         socket.on('move',function(moveData){
-            // ADDS LI TO MOVES LIST AFTER DROP EVENT
-            
-            // entry.className = 'playerMoves';  #NOT DRY
-            entry.setAttribute("class", "playerMoves");
+            // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
+            var list = document.getElementById('moves');
+            var entry = document.createElement('li');
             entry.className = "playerMoves";
             entry.appendChild(document.createTextNode(moveData.from + " to " + moveData.to));
             list.prepend(entry);
@@ -127,9 +123,11 @@ function SocketClient(){
         socket.on('opponentDisconnect',function(){
             alert("Opponent left the room");
             board.setOrientation('white');
-            board.start();
+            board.reset();
             board.competingCpu();
-            
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
+            }
         })
         return {
             setBoard:function(newBoard){
@@ -138,7 +136,6 @@ function SocketClient(){
             sendMove:function(playerColor,source,target,promo){
                 socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});
             },requestNewGame:function(){
-    
                 socket.emit("newGameRequest",room);
             }
         }

@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser       = require("body-parser");
 var mongoose         = require("mongoose");
+Eos = require('eosjs')
 
 // SOCKET FORWARD DECLARATIONS
 var http = require('http').Server(app);

@@ -59,7 +59,6 @@ function Board(){
         entry.setAttribute("class", "playerMoves");
         entry.appendChild(document.createTextNode(move.from + " to " + move.to));
         list.prepend(entry);
-        
     };
 
     var updateStatus= function(){

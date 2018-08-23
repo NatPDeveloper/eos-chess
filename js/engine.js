@@ -43,10 +43,10 @@ function EngineGame(options){
         console.log("MOVES : " + moves);
         return moves;
     }
+
     //prepare the move, this function asks the engine to start
     //look for best move, the engine will invoke onmessage when
     //it has completed search within specific depth
-
     function prepareMove(){
         console.log(board);
         $('.logge').text(board.getPgn()+'\n');
@@ -62,8 +62,6 @@ function EngineGame(options){
             //start searching, if depth exists, use depth paramter, else let the engine use default
             uciCmd('go '+(time.depth?'depth ' +time.depth:''));
         }
-        // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
-        
     }
 
     engine.onmessage = function(event){
@@ -80,16 +78,14 @@ function EngineGame(options){
                     //window.alert("You're being Checked");
 
                 } else if(match[4]=="#"){ // player lose,  game over
-//                    window.alert("Game Over! You lose :)");
+                    window.alert("Game Over! You lose :)");
                 }
                 var list = document.getElementById('moves');
                 var entry = document.createElement('li');
                 entry.setAttribute("class", "playerMoves");
                 entry.appendChild(document.createTextNode(match[1] + " to " + match[2]));
                 list.prepend(entry)
-                board.makeMove(match[1],match[2],match[3]);;
-
-                //window.setTimeOut(updateStatus,200);
+                board.makeMove(match[1],match[2],match[3]);
                 prepareMove();
             }
         }

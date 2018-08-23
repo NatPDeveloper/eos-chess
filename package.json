@@ -12,6 +12,7 @@
     "body-parser": "^1.18.3",
     "chess.js": "^0.10.2",
     "ejs": "^2.6.1",
+    "eosjs": "^16.0.6",
     "express": "^4.16.3",
     "mongoose": "^5.2.9",
     "socket.io": "^2.1.1",
