@@ -38,10 +38,10 @@
     <script>
 
         var newGame;
-var socket;
-var engine;
-var board;
-var init = function(){
+    var socket;
+    var engine;
+    var board;
+    var init = function(){
     engine = EngineGame();
     socket = SocketClient();
 
@@ -57,16 +57,12 @@ var init = function(){
     }
     socket.setBoard(board);
     newGame();
-}
-init()
+    }
+    init()
+    Scatter()
     </script>
 
-    <script>
-        
-
-
-        
-        </script>
+    
 </div>
 
 <% include ./partials/footer %>

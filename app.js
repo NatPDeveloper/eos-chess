@@ -4,6 +4,8 @@ var bodyParser       = require("body-parser");
 var mongoose         = require("mongoose");
 Eos = require('eosjs')
 
+
+
 // SOCKET FORWARD DECLARATIONS
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -203,6 +205,7 @@ io.on('connection', function(socket) {
             break;
           }
         }
+        // 
       }
 })
 
