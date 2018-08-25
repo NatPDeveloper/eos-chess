@@ -1,16 +1,14 @@
 function EngineGame(options){
     var board = Board();
-
     var stockFish = new Worker('../js/stockfish.js');
-
     var engine = stockFish;
+
     // show the engine status to the front end
     var isEngineReady = false; // default
     //var engineFeedback = null; // the format could be Depth: <something> Nps: <something> 
 
     var time = { depth:5 };
     var playerColor = "white"; //default
-
 
     //interface to send commands to the UCI
     function uciCmd(cmd){
@@ -125,6 +123,4 @@ function EngineGame(options){
             prepareMove();
         }
     }
-
-
 }

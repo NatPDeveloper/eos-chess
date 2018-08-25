@@ -38,8 +38,9 @@
     var init = function(){
         engine = EngineGame();
         socket = SocketClient();
-
-        board = Board();
+        
+        var scatter = new Scatter()
+        board = Board(scatter);
         board.setChessEngine(engine);
         board.setSocket(socket);
         newGame = function(){
@@ -53,7 +54,6 @@
         newGame();
     }
     init()
-    Scatter()
     </script>
 </div>
 
