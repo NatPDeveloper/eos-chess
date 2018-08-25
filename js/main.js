@@ -1,21 +1,10 @@
 function SocketClient(){
-    // change to SocketClient.js instead of main
-    // var game; // attach the game board and engine
+    // ** change to SocketClient.js instead of main **
+
     var room; // testing
     var socket = io.connect();   
-    // var engineGame;
-    // board = Board();
-    // board.setChessEngine(engine);
-    // engine.setBoard(board);
-    // engine.reset();
-    // engine.setDepth();
-    // engine.setPlayerColor("white");
-    // engine.start();
     var list = document.getElementById('moves');
-    var entry = document.createElement('li');
-
-    // // // SOCKETIO LOGIC        
-    // socket = io();
+    // var entry = document.createElement('li');
     
     // submits room value from EOS account name box
     document.querySelector('#nameForm').addEventListener('submit', function (e) {
@@ -60,10 +49,12 @@ function SocketClient(){
             socket.emit("newGame",room);
         }
     })
+
     socket.on("newGame",function(){
         board.start();
         socket.emit("newGameRequest",room);
     })
+    
     socket.on("joinRoom",function(newRoom,host){
         window.alert("Joined room " + host);
         room = newRoom;

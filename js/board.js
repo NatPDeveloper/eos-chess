@@ -20,12 +20,12 @@ function Board(scatter){
             }
         }
         if ((orientation === 'white' && piece.search(/^w/) === -1) ||
-                (orientation === 'black' && piece.search(/^b/) === -1)) {
-                return false;
-            }
-      };
+            (orientation === 'black' && piece.search(/^b/) === -1)) {
+            return false;
+        }
+    };
 
-      var onDrop = function(source, target) {
+    var onDrop = function(source, target) {
         // see if the move is legal
         var turn = chess.turn();
         var move = chess.move({
@@ -40,6 +40,9 @@ function Board(scatter){
             window.setTimeout(chessEngine.prepareAiMove(),500);
         else { 
             socket.sendMove(turn, move.from, move.to);
+            var scatterMove = move.from + " to " + move.to;
+            // scatter.setMove(scatterMove)
+            scatter.getMoves()
             if(move.color == "w"){
                 document.querySelector("h3").style.backgroundColor = "black";
                 document.querySelector("h3").style.color = "white";
@@ -59,10 +62,7 @@ function Board(scatter){
         var entry = document.createElement('li');
         entry.setAttribute("class", "playerMoves");
         entry.appendChild(document.createTextNode(move.from + " to " + move.to));
-        list.prepend(entry);
-
-        var scatterMove = move.from + " to " + move.to;
-        scatter.setMove(scatterMove)
+        list.prepend(entry);        
     };
 
     var updateStatus= function(){
@@ -91,9 +91,11 @@ function Board(scatter){
                 status = moveColor + ' to move';
                 // check?
                 if (chess.in_check() === true) {
-                    status += ', ' + moveColor + ' is in check';
+                    // status += ', ' + moveColor + ' is in check';
+                    // document.querySelector("h3").style.backgroundColor = "red";
+                    // document.querySelector("h3").style.color = "yellow";
+                    // document.querySelector("h3").innerHTML = moveColor + ' is in check'
                 }
-        
             }
         // statusEl.html(status);
     };
@@ -113,20 +115,19 @@ function Board(scatter){
     return {
         competingHuman:function(){
             isStockfishOn=false;
-        },
-        competingCpu:function(){
+        }, competingCpu:function(){
             isStockfishOn=true;
         }, setSocket:function(newSocket){
             socket = newSocket;
         }, setChessEngine:function(engine){
             chessEngine = engine;
-        },setOrientation:function(playerColor){
+        }, setOrientation:function(playerColor){
             color = playerColor.charAt(0).toLowerCase();
             if(color=='w' || color=='b')
                 board.orientation(playerColor);
-        },setFenPosition:function(){
+        }, setFenPosition:function(){
             board.position(chess.fen());
-        },getMoveHistory:function(){
+        }, getMoveHistory:function(){
             return chess.history({verbose:true});
         }, getPgn:function(){
             return chess.pgn();
@@ -147,9 +148,8 @@ function Board(scatter){
         }, reset:function(){
             chess.reset();
             board.start();
-        },startBoard:function(){
+        }, startBoard:function(){
             board.start();
         }
     }
-    
 }

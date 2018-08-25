@@ -46,9 +46,7 @@ class Scatter {
         }.bind(this))
     }
     
-    _appTransaction(data){
-        // console.log("this is the identity" + scatter.identity)
-        console.log(this);
+    _getMoves(){
         var eos = this.scatter.eos( this.network, Eos )
         var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
         var options = { authorization: [{ actor:account.name, permission: account.authority }] };
@@ -59,9 +57,39 @@ class Scatter {
             console.log("error", e);
         })
     }
+
+    _setMove(data){
+        var eos = this.scatter.eos( this.network, Eos )
+        var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
+        var options = { authorization: [{ actor:account.name, permission: account.authority }] };
+        
+        eos.contract('eosio').then(contract => {
+            contract.setmove(account.name, data, options)
+        }).catch(e => {
+            console.log("error", e);
+        })
+    }
+
+    _createMatch(data){
+        var eos = this.scatter.eos( this.network, Eos )
+        var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
+        var options = { authorization: [{ actor:account.name, permission: account.authority }] };
+        
+        eos.contract('eosio').then(contract => {
+            contract.setmove(account.name, data, options)
+        }).catch(e => {
+            console.log("error", e);
+        })
+    }
     
     // FUNCTIONS
+    getMoves() {
+        return this._getMoves();
+    }
     setMove(move) {
-        return this._appTransaction(move);
+        return this._setMove(move);
+    }
+    createMatch(data) {
+        return this._createMatch(data);
     }
 }
