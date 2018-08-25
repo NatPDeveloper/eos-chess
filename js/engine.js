@@ -14,7 +14,7 @@ function EngineGame(options){
 
     //interface to send commands to the UCI
     function uciCmd(cmd){
-        console.log("[INPUT] UCI: " + cmd);
+        // console.log("[INPUT] UCI: " + cmd);
         engine.postMessage(cmd);
     }
 
@@ -39,7 +39,7 @@ function EngineGame(options){
             var move = history[i];
             moves+= " " + move.from + move.to + (move.promotion?move.promotion:"");
         }
-        console.log("******************");
+        // console.log("******************");
         console.log("MOVES : " + moves);
         return moves;
     }
@@ -48,7 +48,7 @@ function EngineGame(options){
     //look for best move, the engine will invoke onmessage when
     //it has completed search within specific depth
     function prepareMove(){
-        console.log(board);
+        // console.log(board);
         $('.logge').text(board.getPgn()+'\n');
        
         console.log("CPU is thinking ... ");
@@ -66,19 +66,26 @@ function EngineGame(options){
 
     engine.onmessage = function(event){
         var line = event.data;  //?event.data:event;
-        console.log("[OUTPUT] UCI :" + line);
+        // console.log("[OUTPUT] UCI :" + line);
         if(line == 'readyok'){
             isEngineReady=true;
             reportEngineStatus();
         } else {
             var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?.\bbestmoveSan ...([+]|[#])?/);
-            console.log("match " + match);
+            // console.log("match " + match);
             if(match){
                 if(match[4]=="+"){ // player is being checked
                     //window.alert("You're being Checked");
 
                 } else if(match[4]=="#"){ // player lose,  game over
                     window.alert("Game Over! You lose :)");
+                    board.reset();
+                    
+                    // NOT WORKING YET
+                    var list = document.getElementById('moves');
+                    while( list.firstChild ){
+                        list.removeChild( list.firstChild );
+                    }
                 }
                 var list = document.getElementById('moves');
                 var entry = document.createElement('li');

@@ -15,80 +15,62 @@ function Scatter(){
         broadcast: true,
         sign: true
     }
-    
-    document.getElementById("scatterLogin").addEventListener('click', scatterExtension => {
-        const scatter = window.scatter;
-        window.scatter = null;
 
-        scatter.getIdentity({
-            accounts:[network]
-            }).then(identity => {
-            
-                // This would give back an object with the required fields such as `firstname` and `lastname`
-                // as well as add a permission for your domain or origin to the user's Scatter to allow deeper
-                // requests such as requesting blockchain signatures, or authentication of identities.
-                console.log(identity);
-            
-            }).catch(error => {
-                console.log(error);
-        });
+    // scatter.connect("ChessEOS").then(connected => { gives weird error:
+    // scatter.min.js:30645 GET http://127.0.0.1:50005/socket.io/?EIO=3&transport=polling&t=MLhtaCX 0 ()
 
-        if (scatter.identity) {
+    function appTransaction(data){
+        console.log(scatter.identity)
+        // eos = scatter.eos( network, Eos )
+        account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+        options = { authorization: [{ actor:account.name, permission: account.authority }] };
         
-            const user = {
-                eosAccount: scatter.identity.accounts[0].name,
-                publicKey: scatter.identity.publicKey
-            }
-        }
-    })
-    
-   
-    document.getElementById("scatterLogout").addEventListener('click', function() {
-        scatter.forgetIdentity();
-        alert("logged out of scatter");
-    })
-    
-    // SCATTER TEST
-    document.getElementById("scatterTest").addEventListener('click', function() {
-        const scatter = window.scatter;
-        window.scatter = null;
-        const eos = scatter.eos( network, Eos );
-        const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
-        const options = { authorization: [{ actor:account.name, permission: account.authority }] }
         eos.contract('eosio').then(contract => {
             contract.getmoves(account.name, options)
+        }).catch(e => {
+            console.log("error", e);
         })
-    })
-
-    function appTransaction(action, data){
-        if (scatter.identity) {
-        
-            const user = {
-                eosAccount: scatter.identity.accounts[0].name,
-                publicKey: scatter.identity.publicKey
-            }
-            const eos = scatter.eos( network, Eos );
-            const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
-            const options = { authorization: [{ actor:account.name, permission: account.authority }] }
-            eos.contract('eosio').then(contract => {
-                contract.setmove(account.name, data, options)
-            })
-        } else {
-            const scatter = window.scatter;
-            window.scatter = null;
-            const eos = scatter.eos( network, Eos );
-            const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
-            const options = { authorization: [{ actor:account.name, permission: account.authority }] }
-            eos.contract('eosio').then(contract => {
-                contract.setmove(account.name, data, options)
-            })
-        }
     }
+    
+    document.addEventListener('scatterLoaded', () => {
+        const scatter = window.scatter;
+        window.scatter = null;
+        const eos = scatter.eos( network, Eos )
+        console.log("SHOULD BE NULLLLLLLLLLLLLLLLLLLLLLL" + scatter)
+        
+        let getIdentity = () => {
+            scatter.getIdentity({accounts:[network]}).then(identity => {
+              console.log(identity, "identitySuccess")
+            }).catch(error => {
+              console.log(error, "identityCrisis")
+            })
+          }
+
+        document.getElementById("scatterLogout").addEventListener('click', function() {
+            scatter.forgetIdentity().catch(error => {
+                alert(error)
+            });
+            alert("logged out of scatter");
+        })
+    
+        document.getElementById("scatterLogin").addEventListener('click', function() {
+            getIdentity()
+        });
+    
+        document.getElementById("scatterTest").addEventListener('click', function() { 
+            eos = scatter.eos( network, Eos )
+            const account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
+            const options = { authorization: [{ actor:account.name, permission: account.authority }] };
+            eos.contract('eosio').then(contract => {
+                contract.getmoves(account.name, options)
+            })
+        })
+        
+    })
+    
+    console.log("how many times is this running?")
 
     return {
-        // logout:function(){
-        //     scatter.forgetIdentity();
-        // },
         addPlayer:function(player){
             return appTransaction("addplayer");
         },getPlayer:function(){
@@ -96,7 +78,7 @@ function Scatter(){
         }, update:function(player, newPlayerName){
             return appTransaction("update");
         }, setMove:function(move){
-            return appTransaction("setmove", move);
+            return appTransaction(move);
         }, getMoves:function(){
             return appTransaction("getmoves");
         }

@@ -4,18 +4,18 @@ function SocketClient(){
     var room; // testing
     var socket = io.connect();   
     var engineGame;
-    board = Board();
-    board.setChessEngine(engine);
-    engine.setBoard(board);
-    engine.reset();
-    engine.setDepth();
-    engine.setPlayerColor("white");
-    engine.start();
+    // board = Board();
+    // board.setChessEngine(engine);
+    // engine.setBoard(board);
+    // engine.reset();
+    // engine.setDepth();
+    // engine.setPlayerColor("white");
+    // engine.start();
     var list = document.getElementById('moves');
     var entry = document.createElement('li');
 
     // // // SOCKETIO LOGIC        
-    socket = io();
+    // socket = io();
     
     // submits room value from EOS account name box
     document.querySelector('#nameForm').addEventListener('submit', function (e) {
@@ -86,6 +86,7 @@ function SocketClient(){
             alert("You did not have a name");
         }
     });
+
     socket.on("changeColor",function(moveData){
         console.log("this is the moveData " + moveData.color);
         if(moveData.color == "w"){
@@ -132,9 +133,10 @@ function SocketClient(){
         document.querySelector("h3").style.color = "black";
         document.querySelector("h3").innerHTML = "WHITE TO MOVE"
     })
+
     return {
         setBoard:function(newBoard){
-            board= newBoard;
+            board = newBoard;
         },
         sendMove:function(playerColor,source,target,promo){
             socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});

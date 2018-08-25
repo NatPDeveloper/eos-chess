@@ -1,9 +1,9 @@
 function Board(){
-    var socket= io();;
+    var socket= io();
     var chess = Chess();
     var chessEngine;
     var color;
-    var scatter = Scatter();
+    // var scatter = Scatter();
 
     var isStockfishOn = true; // true until a player connects;
     // var statusEl = $('#status');
@@ -61,6 +61,7 @@ function Board(){
         entry.appendChild(document.createTextNode(move.from + " to " + move.to));
         list.prepend(entry);
 
+        var scatter = Scatter();
         var scatterMove = move.from + " to " + move.to;
         scatter.setMove(scatterMove)
     };
@@ -141,7 +142,7 @@ function Board(){
         }, isGameOver:function(){
             return chess.game_over();
         }, makeMove:function(source, target, promo ){
-            chess.move({from:source,to:target,promotion:promo});//chessEngine.prepareAiMove();
+            chess.move({from:source,to:target,promotion:promo});
         }, reset:function(){
             chess.reset();
             board.start();
