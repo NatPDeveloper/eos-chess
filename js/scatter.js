@@ -15,12 +15,12 @@ function Scatter(){
         broadcast: true,
         sign: true
     }
-
+    
     // scatter.connect("ChessEOS").then(connected => { gives weird error:
     // scatter.min.js:30645 GET http://127.0.0.1:50005/socket.io/?EIO=3&transport=polling&t=MLhtaCX 0 ()
 
     function appTransaction(data){
-        console.log(scatter.identity)
+        // console.log(scatter.identity)
         // eos = scatter.eos( network, Eos )
         account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
         options = { authorization: [{ actor:account.name, permission: account.authority }] };
@@ -33,18 +33,19 @@ function Scatter(){
     }
     
     document.addEventListener('scatterLoaded', () => {
-        const scatter = window.scatter;
-        window.scatter = null;
+        const scatter = window.scatter
         const eos = scatter.eos( network, Eos )
+        const account = scatter.identity.accounts.find(account => account.blockchain === 'eos')
+        const options = { authorization: [{ actor:account.name, permission: account.authority }] };
         console.log("SHOULD BE NULLLLLLLLLLLLLLLLLLLLLLL" + scatter)
         
         let getIdentity = () => {
             scatter.getIdentity({accounts:[network]}).then(identity => {
-              console.log(identity, "identitySuccess")
+                console.log(identity, "identitySuccess")
             }).catch(error => {
-              console.log(error, "identityCrisis")
+                console.log(error, "identityCrisis")
             })
-          }
+        }
 
         document.getElementById("scatterLogout").addEventListener('click', function() {
             scatter.forgetIdentity().catch(error => {
@@ -58,14 +59,12 @@ function Scatter(){
         });
     
         document.getElementById("scatterTest").addEventListener('click', function() { 
-            eos = scatter.eos( network, Eos )
-            const account = scatter.identity.accounts.find(account => account.blockchain === 'eos');
-            const options = { authorization: [{ actor:account.name, permission: account.authority }] };
+            // eos = scatter.eos( network, Eos )
             eos.contract('eosio').then(contract => {
                 contract.getmoves(account.name, options)
             })
         })
-        
+        window.scatter = null
     })
     
     console.log("how many times is this running?")
@@ -73,7 +72,7 @@ function Scatter(){
     return {
         addPlayer:function(player){
             return appTransaction("addplayer");
-        },getPlayer:function(){
+        }, getPlayer:function(){
             return appTransaction("getplayer");
         }, update:function(player, newPlayerName){
             return appTransaction("update");

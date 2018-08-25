@@ -83,6 +83,7 @@ function Board(){
                 board.start();
             }
             return; 
+
             } else if(chess.in_draw()){
                 status = "Game Over, Drawn";
                 window.alert(status);
@@ -92,14 +93,14 @@ function Board(){
                 // check?
                 if (chess.in_check() === true) {
                     status += ', ' + moveColor + ' is in check';
-            }
+                }
         
-        }
+            }
         // statusEl.html(status);
-    
     };
     
     updateStatus();
+
     var cfg = {
         showErrors: true,
         draggable: true,
@@ -109,6 +110,7 @@ function Board(){
     };
 
     var board = new ChessBoard('board', cfg);
+    
     return {
         competingHuman:function(){
             isStockfishOn=false;

@@ -133,6 +133,7 @@ io.on('connection', function(socket) {
         socket.broadcast.to(room).emit("changeColor",moveData);
         console.log(moveData.color);
     }
+
     socket.on('sendName',sendName)
     function sendName(name){
         var isNameValid = true;
@@ -150,6 +151,7 @@ io.on('connection', function(socket) {
             socket.emit("roomId",room);
         } 
     }
+    
     socket.on("joinRoom",joinRoom);
     function joinRoom(room){
         console.log("joined room " + room);

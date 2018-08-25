@@ -4,9 +4,9 @@ function EngineGame(options){
     var stockFish = new Worker('../js/stockfish.js');
 
     var engine = stockFish;
-     // show the engine status to the front end
+    // show the engine status to the front end
     var isEngineReady = false; // default
-   //var engineFeedback = null; // the format could be Depth: <something> Nps: <something> 
+    //var engineFeedback = null; // the format could be Depth: <something> Nps: <something> 
 
     var time = { depth:5 };
     var playerColor = "white"; //default
@@ -29,8 +29,8 @@ function EngineGame(options){
             status+='Ready';
         }
         $(".engineStatus").html(status);
-        
     }
+
     //get all the moves were made 
     function getMoves(){
         var moves = "";
@@ -39,7 +39,6 @@ function EngineGame(options){
             var move = history[i];
             moves+= " " + move.from + move.to + (move.promotion?move.promotion:"");
         }
-        // console.log("******************");
         console.log("MOVES : " + moves);
         return moves;
     }
@@ -48,7 +47,6 @@ function EngineGame(options){
     //look for best move, the engine will invoke onmessage when
     //it has completed search within specific depth
     function prepareMove(){
-        // console.log(board);
         $('.logge').text(board.getPgn()+'\n');
        
         console.log("CPU is thinking ... ");

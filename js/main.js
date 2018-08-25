@@ -1,9 +1,9 @@
 function SocketClient(){
     // change to SocketClient.js instead of main
-    var game; // attach the game board and engine
+    // var game; // attach the game board and engine
     var room; // testing
     var socket = io.connect();   
-    var engineGame;
+    // var engineGame;
     // board = Board();
     // board.setChessEngine(engine);
     // engine.setBoard(board);
