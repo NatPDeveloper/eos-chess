@@ -1,19 +1,32 @@
 var express = require("express");
 var app = express();
-var bodyParser       = require("body-parser");
-var mongoose         = require("mongoose");
+var bodyParser = require("body-parser");
+var mongoose = require("mongoose");
 
-// const Eos = require('eosjs');
-config = {
-    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f', // 32 byte (64 char) hex string
-    keyProvider: ['5J6oSzZkZK7PLpUavCv6VDBtL29PmdnMcxhRSmXnUaxqA6u3MSw'], // WIF string or array of keys..
-    httpEndpoint: 'http://127.0.0.1:8888',
-    authorization: 'test@active'
-    // expireInSeconds: 60,
-    // broadcast: true,
-    // verbose: false, // API activity
-    // sign: true
-};
+// DEMUX ACTION READER SETUP
+const { NodeosActionReader } = require("demux-eos")
+const MyActionHandler = require("./js/ActionHandler")
+const { BaseActionWatcher } = require("demux")
+const updaters = require("./js/updaters")
+const effects = require("./js/effects")
+
+const actionReader = new NodeosActionReader(
+    "http://127.0.0.1:8888", // Locally hosted node needed for reasonable indexing speed
+    144438, // First actions relevant to this dapp happen at this block
+)
+
+const actionHandler = new MyActionHandler(
+    updaters,
+    effects,
+)
+
+const actionWatcher = new BaseActionWatcher(
+    actionReader,
+    actionHandler,
+    250, // Poll at twice the block interval for less latency
+)
+
+actionWatcher.watch() // Start watch loop
 
 // SOCKET FORWARD DECLARATIONS
 var http = require('http').Server(app);
@@ -43,37 +56,37 @@ app.use(bodyParser.urlencoded({extended: true}));
 // MONGOOSE/MODEL CONFIG
 var moveSchema = new mongoose.Schema({
     player: String,
+    roomId: String,
     move: String,
     created: {type: Date, default: Date.now()}
 });
 
-var hostSchema = new mongoose.Schema({
-    host: String,
-    created: {type: Date, default: Date.now()}
-});
-
 var Move = mongoose.model("Move", moveSchema);
-var Host = mongoose.model("Host", hostSchema);
 
 var data = [
     {
         player: "Cloud's rest", 
+        roomId: "df98as7dfa98sd7",
         move: "RE1"
     },
     {
         player: "Cloud's rest", 
+        roomId: "df98as7gasd8sd7",
         move: "RE4"
     },
     {
         player: "Cloud's rest", 
+        roomId: "dfgaddfa98sd7",
         move: "RE6"
     },
     {
         player: "Cloud's rest", 
+        roomId: "df98aasdfa98sd7",
         move: "RE6"
     },
     {
         player: "Cloud's rest", 
+        roomId: "df98asdf98sd7",
         move: "RE6"
     }
 ]

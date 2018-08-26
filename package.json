@@ -11,6 +11,8 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "chess.js": "^0.10.2",
+    "demux": "^1.0.5",
+    "demux-eos": "^1.0.1",
     "ejs": "^2.6.1",
     "eosjs": "^16.0.6",
     "express": "^4.16.3",
