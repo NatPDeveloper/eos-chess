@@ -20,6 +20,7 @@ class Scatter {
 
         document.addEventListener('scatterLoaded', function() {
             this.scatter = window.scatter
+            window.scatter = null
 
             document.getElementById("scatterLogout").addEventListener('click', function() {
                 this.scatter.forgetIdentity().catch(error => {
@@ -29,8 +30,7 @@ class Scatter {
             }.bind(this))
         
             document.getElementById("scatterLogin").addEventListener('click', function(event) {
-                console.log(event.target);
-                console.log(1, this);
+                
                 let getIdentity = () => {
                     this.scatter.getIdentity({accounts:[this.network]}).then(identity => {
                         console.log(identity, "identitySuccess")
@@ -40,56 +40,24 @@ class Scatter {
                 }
                 getIdentity()
             }.bind(this));
-        
-            window.scatter = null
 
         }.bind(this))
     }
-    
-    _getMoves(){
-        var eos = this.scatter.eos( this.network, Eos )
-        var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
-        var options = { authorization: [{ actor:account.name, permission: account.authority }] };
-        
-        eos.contract('eosio').then(contract => {
-            contract.getmoves(account.name, options)
-        }).catch(e => {
-            console.log("error", e);
-        })
-    }
 
-    _setMove(data){
+    _setMove(roomId, move){
         var eos = this.scatter.eos( this.network, Eos )
         var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
         var options = { authorization: [{ actor:account.name, permission: account.authority }] };
         
         eos.contract('eosio').then(contract => {
-            contract.setmove(account.name, data, options)
-        }).catch(e => {
-            console.log("error", e);
-        })
-    }
-
-    _createMatch(data){
-        var eos = this.scatter.eos( this.network, Eos )
-        var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
-        var options = { authorization: [{ actor:account.name, permission: account.authority }] };
-        
-        eos.contract('eosio').then(contract => {
-            contract.setmove(account.name, data, options)
+            contract.setmove(account.name, roomId, move, options)
         }).catch(e => {
             console.log("error", e);
         })
     }
     
     // FUNCTIONS
-    getMoves() {
-        return this._getMoves();
-    }
-    setMove(move) {
-        return this._setMove(move);
-    }
-    createMatch(data) {
-        return this._createMatch(data);
+    setMove(roomId, move) {
+        return this._setMove(roomId, move);
     }
 }

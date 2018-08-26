@@ -1,6 +1,7 @@
 function EngineGame(options){
     var board = Board();
     var stockFish = new Worker('../js/stockfish.js');
+    // var list = document.getElementById('moves');
     var engine = stockFish;
 
     // show the engine status to the front end
@@ -71,14 +72,11 @@ function EngineGame(options){
             // console.log("match " + match);
             if(match){
                 if(match[4]=="+"){ // player is being checked
-                    //window.alert("You're being Checked");
+                    // window.alert("You're being Checked");
 
                 } else if(match[4]=="#"){ // player lose,  game over
                     window.alert("Game Over! You lose :)");
                     board.reset();
-                    
-                    // NOT WORKING YET
-                    var list = document.getElementById('moves');
                     while( list.firstChild ){
                         list.removeChild( list.firstChild );
                     }

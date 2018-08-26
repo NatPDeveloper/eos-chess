@@ -1,9 +1,10 @@
 function Board(scatter){
     var socket= io();
+    var list = document.getElementById('moves');
     var chess = Chess();
     var chessEngine;
     var color;
-    console.log(window);
+    console.log("why is this showing twice?");
 
     var isStockfishOn = true; // true until a player connects;
     // var statusEl = $('#status');
@@ -16,6 +17,9 @@ function Board(scatter){
                     board.start();
                 } else {
                     socket.requestNewGame();
+                }
+                while( list.firstChild ){
+                    list.removeChild( list.firstChild );
                 }
             }
         }
@@ -40,19 +44,19 @@ function Board(scatter){
             window.setTimeout(chessEngine.prepareAiMove(),500);
         else { 
             socket.sendMove(turn, move.from, move.to);
+
+            var room = socket.returnRoom()
             var scatterMove = move.from + " to " + move.to;
-            // scatter.setMove(scatterMove)
-            scatter.getMoves()
+            scatter.setMove(room, scatterMove)
+            
             if(move.color == "w"){
                 document.querySelector("h3").style.backgroundColor = "black";
                 document.querySelector("h3").style.color = "white";
-                document.querySelector("h3").innerHTML = "BLACK TO MOVE"
-                console.log("changed to black LOCALLY");
+                document.querySelector("h3").innerHTML = "BLACK TO MOVE";
             } else if(move.color == "b") {
                 document.querySelector("h3").style.backgroundColor = "white";
                 document.querySelector("h3").style.color = "black";
-                document.querySelector("h3").innerHTML = "WHITE TO MOVE"
-                console.log("changed to white LOCALLY");
+                document.querySelector("h3").innerHTML = "WHITE TO MOVE";
             } else {
                 console.log("not needed");
             }
@@ -90,12 +94,7 @@ function Board(scatter){
             } else {
                 status = moveColor + ' to move';
                 // check?
-                if (chess.in_check() === true) {
-                    // status += ', ' + moveColor + ' is in check';
-                    // document.querySelector("h3").style.backgroundColor = "red";
-                    // document.querySelector("h3").style.color = "yellow";
-                    // document.querySelector("h3").innerHTML = moveColor + ' is in check'
-                }
+                
             }
         // statusEl.html(status);
     };

@@ -18,6 +18,14 @@ body {
     margin-top: 40px;
 }
 
+#scatterLogin{
+    /* display:none; */
+}
+
+#scatterLogout{
+    /* display:none; */
+}
+
 #name {
     width: 400px;
     margin: 0 auto;

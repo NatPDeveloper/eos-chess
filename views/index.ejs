@@ -5,9 +5,6 @@
         <div class="col-7">
             <h1>Welcome to ChessEOS</h1>
             <div id="board" style="width: 600px"></div>
-            <!-- <p>FEN: <span id="fen"></span></p>
-            <p>PGN: <span id="pgn"></span></p>
-            <input type="button" id="getPositionBtn" value="Show position in console" /> -->
         </div>
         <div id="move" class="col-5">
             <h3><span id="status">WHITE TO MOVE</span></h3>
@@ -40,7 +37,8 @@
         socket = SocketClient();
         
         var scatter = new Scatter()
-        board = Board(scatter);
+
+        board = Board(scatter, socket);
         board.setChessEngine(engine);
         board.setSocket(socket);
         newGame = function(){

@@ -2,7 +2,8 @@ function SocketClient(){
     // ** change to SocketClient.js instead of main **
 
     var room; // testing
-    var socket = io.connect();   
+    var socket = io.connect(); 
+    var chess = Chess();  
     var list = document.getElementById('moves');
     // var entry = document.createElement('li');
     
@@ -79,7 +80,7 @@ function SocketClient(){
     });
 
     socket.on("changeColor",function(moveData){
-        console.log("this is the moveData " + moveData.color);
+        // console.log("this is the moveData " + moveData.color);
         if(moveData.color == "w"){
             document.querySelector("h3").style.backgroundColor = "black";
             document.querySelector("h3").style.color = "white";
@@ -110,6 +111,7 @@ function SocketClient(){
         promo = moveData.promo;
         board.makeMove(from, to,promo);
         board.setFenPosition();
+        console.log("this is the check status not local " + chess.in_check())
     })
 
     socket.on('opponentDisconnect',function(){
@@ -133,6 +135,8 @@ function SocketClient(){
             socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});
         },requestNewGame:function(){
             socket.emit("newGameRequest",room);
+        }, returnRoom:function(){
+            return room;
         }
     }
 }
