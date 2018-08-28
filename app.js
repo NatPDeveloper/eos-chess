@@ -1,5 +1,5 @@
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
@@ -26,11 +26,11 @@ const actionWatcher = new BaseActionWatcher(
     250, // Poll at twice the block interval for less latency
 )
 
-actionWatcher.watch() // Start watch loop
+// actionWatcher.watch() // Start watch loop
 
-// SOCKET FORWARD DECLARATIONS
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+// SOCKET IO SETUP
+var server = app.listen(3000);
+var io = require('socket.io')(server);
 
 // USERS LIST
 var users = []
@@ -53,64 +53,200 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 
-// MONGOOSE/MODEL CONFIG
-var moveSchema = new mongoose.Schema({
-    player: String,
-    roomId: String,
-    move: String,
+//MONGOOSE/MODEL CONFIG
+var playersSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    layer: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Player"
+        },
+        username: String
+    },
+    wins: {type: Number, default: '0'},
+    losses: {type: Number, default: '0'},
+    draws: {type: Number, default: '0'},
+    matches: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Match"
+        }
+    ],
     created: {type: Date, default: Date.now()}
 });
 
-var Move = mongoose.model("Move", moveSchema);
+var matchSchema = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    player: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Player"
+        },
+        username: String
+    },
+    opponent: String,
+    status: {type: String, default: "Game in progress ..."}, // WIN / DRAW / LOOSE (if player leaves, other player wins)
+    tx_id: String,
+    moves: [
+        {
+           type: mongoose.Schema.Types.ObjectId,
+           ref: "Move"
+        }
+     ],
+    created: {type: Date, default: Date.now()}
+});
 
-var data = [
+var moveSchema = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    player: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Player"
+        },
+        username: String
+    },
+    piece: String,
+    from: String,
+    to: String,
+    created: {type: Date, default: Date.now()}
+});
+
+var playerSchema = mongoose.Schema({
+    username: String,
+    created: {type: Date, default: Date.now()}
+});
+
+var Players = mongoose.model("Players", playersSchema);
+var Match = mongoose.model("Match", matchSchema);
+var Move = mongoose.model("Move", moveSchema);
+var Player = mongoose.model("Player", playerSchema);
+
+var the_players = [
     {
-        player: "Cloud's rest", 
-        roomId: "df98as7dfa98sd7",
-        move: "RE1"
+        player: {
+            username:'test1'
+        },
+        wins: '1',
+        losses: '0',
+        draws: '2'
     },
     {
-        player: "Cloud's rest", 
-        roomId: "df98as7gasd8sd7",
-        move: "RE4"
+        player: {
+            username:'test1'
+        },
+        wins: '1',
+        losses: '0',
+        draws: '2'
     },
     {
-        player: "Cloud's rest", 
-        roomId: "dfgaddfa98sd7",
-        move: "RE6"
-    },
-    {
-        player: "Cloud's rest", 
-        roomId: "df98aasdfa98sd7",
-        move: "RE6"
-    },
-    {
-        player: "Cloud's rest", 
-        roomId: "df98asdf98sd7",
-        move: "RE6"
+        player: {
+            username:'test1'
+        }
     }
+]
+
+var matches = [
+    { 
+        matchId: '35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221',
+        opponent: 'test2',
+        status: 'DRAW' // WIN / DRAW / LOOSE (if player leaves, other player wins)
+    },
+    { 
+        matchId: '35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221',
+        opponent: 'test2',
+        status: 'WIN' // WIN / DRAW / LOOSE (if player leaves, other player wins)
+    },
+    { 
+        matchId: '35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221',
+        opponent: 'test2',
+        status: 'LOSS' // WIN / DRAW / LOOSE (if player leaves, other player wins)
+    },
+    { 
+        opponent: 'test2', // SHOULD SAY TBD
+    }
+]
+
+var moves = [
+    { 
+        piece: 'p',
+        from: 'a4',
+        to: 'a5' 
+    },
+    { 
+        piece: 'p',
+        from: 'a4',
+        to: 'a5' 
+    },
+    { 
+        piece: 'p',
+        from: 'a4',
+        to: 'a5' 
+    },
 ]
 
 function seedDB(){
     // Remove all campgrounds
-    Move.remove({}, function(err){
+    Players.remove({}, function(err){
         if(err){
             console.log(err);
         }
-        console.log("removed moves!");
-        // data.forEach(function(seed){
-        //     Move.create(seed, function(err, move){
-        //         if(err){
-        //             console.log(err)
-        //         } else {
-        //             console.log("added a move");
-        //         }; 
-        //     });
-        // });
+        Match.remove({}, function(err){
+            if(err){
+                console.log(err);
+            }
+            console.log("removed moves!");
+            the_players.forEach(function(seed){
+                Players.create(seed, function(err, player){
+                    if(err){
+                        console.log(err);
+                    } else {
+                        console.log("added a player");
+                        Match.create(
+                            {
+                                player: {
+                                    username:'test1'
+                                },
+                                opponent: "test2",
+                                tx_id: "35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221",
+                                // moves: 
+                                // [{
+                                //     player: "test1",
+                                //     piece: 'p',
+                                //     from: 'a4',
+                                //     to: 'a5' 
+                                // }],
+                            }, function(err, match){
+                                if(err){
+                                    console.log(err);
+                                } else {
+                                    player.matches.push(match);
+                                    player.save();
+                                    console.log("Created new match");
+                                }
+                        });
+                        // Move.create(
+                        //     {
+                        //         player: "test1",
+                        //         piece: 'p',
+                        //         from: 'a4',
+                        //         to: 'a5' 
+                        //     }, function(err, move){
+                        //         if(err){
+                        //             console.log(err);
+                        //         } else {
+                        //             matches.moves.push(move);
+                        //             matches.save();
+                        //             console.log("Created new match");
+                        //         }
+                        // });
+                    }; 
+                });
+            });
+        });
     });
 };
 
-seedDB()
+// seedDB()
 
 // SETUP RESOURCES TO BE USED
 app.use("/js", express.static(__dirname + '/js'));
@@ -135,7 +271,27 @@ app.get("/about", function(req, res){
 });
 
 app.get("/stats", function(req, res){
-    res.render('stats');
+    Players.find({}, function(err, allPlayers){
+        if(err){
+            console.log(err);
+        } else {
+           res.render("stats",{players : allPlayers});
+        }
+     });
+});
+
+app.get("/matches", function(req, res){
+    Match.find({}, function(err, allMatches){
+        if(err){
+            console.log(err);
+        } else {
+           res.render("matches",{matches : allMatches});
+        }
+     });
+});
+
+app.get("/moves", function(req, res){
+    res.render('moves');
 });
 
 // SOCKET LOGIC
@@ -225,6 +381,8 @@ io.on('connection', function(socket) {
     }
 })
 
-http.listen(3000, function(){
-    console.log('listening on *:3000');
-});
+module.exports = app;
+
+// http.listen(3000, function(){
+//     console.log('listening on *:3000');
+// });

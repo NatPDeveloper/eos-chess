@@ -36,7 +36,6 @@ function Board(scatter){
             from: source,
             to: target
         });
-
         // illegal move
         if (move === null) return 'snapback';
         //player just end turn, CPU starts searching after a second
@@ -46,7 +45,9 @@ function Board(scatter){
             socket.sendMove(turn, move.from, move.to);
 
             var room = socket.returnRoom()
-            var scatterMove = move.from + " to " + move.to;
+            var scatterMove = move.piece + " " + move.from + " to " + move.to;
+            
+            // ADD OPONENT TO PUSH WITH TRANSACTION
             scatter.setMove(room, scatterMove)
             
             if(move.color == "w"){
@@ -89,6 +90,9 @@ function Board(scatter){
 
             } else if(chess.in_draw()){
                 status = "Game Over, Drawn";
+
+                // PUT SCATTER DRAW LOGIC
+                
                 window.alert(status);
                 return;
             } else {

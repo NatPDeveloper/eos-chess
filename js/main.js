@@ -1,7 +1,8 @@
 function SocketClient(){
     // ** change to SocketClient.js instead of main **
 
-    var room; // testing
+    var room;
+
     var socket = io.connect(); 
     var chess = Chess();  
     var list = document.getElementById('moves');
@@ -125,6 +126,8 @@ function SocketClient(){
         document.querySelector("h3").style.backgroundColor = "white";
         document.querySelector("h3").style.color = "black";
         document.querySelector("h3").innerHTML = "WHITE TO MOVE"
+
+        // ADD SCATTER LOGIC TO SEND WIN TO NON-DC'D PLAYER
     })
 
     return {

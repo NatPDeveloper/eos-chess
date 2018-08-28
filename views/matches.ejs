@@ -1,0 +1,29 @@
+<% include ./partials/header %>
+
+<div class="container">
+    <table class="table table-striped table-hover table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Matches</th>
+            <th scope="col">Player</th>
+            <th scope="col">Opponent</th>
+            <th scope="col">Win / Loss / Draw</th>
+            <th scope="col">Match Transaction ID</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% matches.forEach(function(match, i){ %>
+                <tr onclick="window.location='https://eosmonitor.io/account/<%= match %>'">
+                    <th scope="row"><%= i + 1 %></th>
+                    <!-- Need the player here as well -->
+                    <td><%= match.player.username %></a></td>
+                    <td><%= match.opponent %></a></td>
+                    <td><%= match.status %></a></td>
+                    <td><%= match.tx_id %></a></td>
+                </tr>
+                <% }); %>
+        </tbody>
+      </table>
+</div>
+
+<% include ./partials/footer %>
