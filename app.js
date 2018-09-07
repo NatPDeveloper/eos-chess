@@ -6,10 +6,10 @@ const mongoose = require("mongoose");
 
 // DEMUX ACTION READER SETUP
 const { NodeosActionReader } = require("demux-eos")
-const MyActionHandler = require("./js/lib/demux/ActionHandler")
+const MyActionHandler = require("./js/lib/demux-js/ActionHandler")
 const { BaseActionWatcher } = require("demux")
-const updaters = require("./js/lib/demux/updaters")
-const effects = require("./js/lib/demux/effects")
+const updaters = require("./js/lib/demux-js/updaters")
+const effects = require("./js/lib/demux-js/effects")
 
 const actionReader = new NodeosActionReader(
     "http://127.0.0.1:8888", // Locally hosted node needed for reasonable indexing speed
