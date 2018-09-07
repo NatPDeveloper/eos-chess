@@ -9,16 +9,18 @@
             <th scope="col">Wins</th>
             <th scope="col">Draws</th>
             <th scope="col">Losses</th>
+            <th scope="col">Temp ID</th>
           </tr>
         </thead>
         <tbody>
           <% players.forEach(function(player, i){ %>
-            <tr onclick="window.location='https://eosmonitor.io/account/<%= player.player %>'">
+            <tr>
                 <th scope="row"><%= i + 1 %></th>
-                <td><%= player.player.username %></a></td>
+                <td><%= player.player_name %></a></td>
                 <td><%= player.wins %></td> 
                 <td><%= player.draws %></td> 
                 <td><%= player.losses %></td> 
+                <td><%= player %></td>
             </tr>
           <% }); %>
         </tbody>

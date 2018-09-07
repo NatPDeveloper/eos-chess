@@ -1,18 +1,19 @@
 const express = require("express");
 const app = express();
-var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
+const morgan = require('morgan');
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 // DEMUX ACTION READER SETUP
 const { NodeosActionReader } = require("demux-eos")
-const MyActionHandler = require("./js/ActionHandler")
+const MyActionHandler = require("./js/lib/demux/ActionHandler")
 const { BaseActionWatcher } = require("demux")
-const updaters = require("./js/updaters")
-const effects = require("./js/effects")
+const updaters = require("./js/lib/demux/updaters")
+const effects = require("./js/lib/demux/effects")
 
 const actionReader = new NodeosActionReader(
     "http://127.0.0.1:8888", // Locally hosted node needed for reasonable indexing speed
-    144438, // First actions relevant to this dapp happen at this block
+    172000, // First actions relevant to this dapp happen at this block
 )
 
 const actionHandler = new MyActionHandler(
@@ -26,7 +27,7 @@ const actionWatcher = new BaseActionWatcher(
     250, // Poll at twice the block interval for less latency
 )
 
-// actionWatcher.watch() // Start watch loop
+actionWatcher.watch() // Start watch loop
 
 // SOCKET IO SETUP
 var server = app.listen(3000);
@@ -52,201 +53,44 @@ mongoose.connect("mongodb://localhost/chess_eos");
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json()); // EXTRACTS JSON DATA
+app.use(morgan('dev'));
+
+// CHANGE * to MY SERVER SO ONLY I CAN INTERACT WITH API
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // * Gives access to any client
+    // res.header(
+    //     'Access-Control-Allow-Headers', 
+    //     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    // );
+    // if (req.method === 'OPTIONS') {
+    //     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    //     return res.status(200).json({});
+    // }
+    next();
+});
 
 //MONGOOSE/MODEL CONFIG
-var playersSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    layer: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Player"
-        },
-        username: String
-    },
-    wins: {type: Number, default: '0'},
-    losses: {type: Number, default: '0'},
-    draws: {type: Number, default: '0'},
-    matches: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Match"
-        }
-    ],
-    created: {type: Date, default: Date.now()}
-});
-
-var matchSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    player: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Player"
-        },
-        username: String
-    },
-    opponent: String,
-    status: {type: String, default: "Game in progress ..."}, // WIN / DRAW / LOOSE (if player leaves, other player wins)
-    tx_id: String,
-    moves: [
-        {
-           type: mongoose.Schema.Types.ObjectId,
-           ref: "Move"
-        }
-     ],
-    created: {type: Date, default: Date.now()}
-});
-
-var moveSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    player: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Player"
-        },
-        username: String
-    },
-    piece: String,
-    from: String,
-    to: String,
-    created: {type: Date, default: Date.now()}
-});
-
-var playerSchema = mongoose.Schema({
-    username: String,
-    created: {type: Date, default: Date.now()}
-});
-
-var Players = mongoose.model("Players", playersSchema);
-var Match = mongoose.model("Match", matchSchema);
-var Move = mongoose.model("Move", moveSchema);
-var Player = mongoose.model("Player", playerSchema);
-
-var the_players = [
-    {
-        player: {
-            username:'test1'
-        },
-        wins: '1',
-        losses: '0',
-        draws: '2'
-    },
-    {
-        player: {
-            username:'test1'
-        },
-        wins: '1',
-        losses: '0',
-        draws: '2'
-    },
-    {
-        player: {
-            username:'test1'
-        }
-    }
-]
-
-var matches = [
-    { 
-        matchId: '35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221',
-        opponent: 'test2',
-        status: 'DRAW' // WIN / DRAW / LOOSE (if player leaves, other player wins)
-    },
-    { 
-        matchId: '35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221',
-        opponent: 'test2',
-        status: 'WIN' // WIN / DRAW / LOOSE (if player leaves, other player wins)
-    },
-    { 
-        matchId: '35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221',
-        opponent: 'test2',
-        status: 'LOSS' // WIN / DRAW / LOOSE (if player leaves, other player wins)
-    },
-    { 
-        opponent: 'test2', // SHOULD SAY TBD
-    }
-]
-
-var moves = [
-    { 
-        piece: 'p',
-        from: 'a4',
-        to: 'a5' 
-    },
-    { 
-        piece: 'p',
-        from: 'a4',
-        to: 'a5' 
-    },
-    { 
-        piece: 'p',
-        from: 'a4',
-        to: 'a5' 
-    },
-]
-
-function seedDB(){
-    // Remove all campgrounds
-    Players.remove({}, function(err){
-        if(err){
-            console.log(err);
-        }
-        Match.remove({}, function(err){
-            if(err){
-                console.log(err);
-            }
-            console.log("removed moves!");
-            the_players.forEach(function(seed){
-                Players.create(seed, function(err, player){
-                    if(err){
-                        console.log(err);
-                    } else {
-                        console.log("added a player");
-                        Match.create(
-                            {
-                                player: {
-                                    username:'test1'
-                                },
-                                opponent: "test2",
-                                tx_id: "35000f32ef542f2b8e693fee15b73dddd433b18484070120b4ddf4f112c17221",
-                                // moves: 
-                                // [{
-                                //     player: "test1",
-                                //     piece: 'p',
-                                //     from: 'a4',
-                                //     to: 'a5' 
-                                // }],
-                            }, function(err, match){
-                                if(err){
-                                    console.log(err);
-                                } else {
-                                    player.matches.push(match);
-                                    player.save();
-                                    console.log("Created new match");
-                                }
-                        });
-                        // Move.create(
-                        //     {
-                        //         player: "test1",
-                        //         piece: 'p',
-                        //         from: 'a4',
-                        //         to: 'a5' 
-                        //     }, function(err, move){
-                        //         if(err){
-                        //             console.log(err);
-                        //         } else {
-                        //             matches.moves.push(move);
-                        //             matches.save();
-                        //             console.log("Created new match");
-                        //         }
-                        // });
-                    }; 
-                });
-            });
-        });
-    });
-};
-
-// seedDB()
+// var playersSchema = new mongoose.Schema({
+//     _id: mongoose.Schema.Types.ObjectId,
+//     layer: {
+//         id: {
+//             type: mongoose.Schema.Types.ObjectId,
+//             ref: "Player"
+//         },
+//         username: String
+//     },
+//     wins: {type: Number, default: '0'},
+//     losses: {type: Number, default: '0'},
+//     draws: {type: Number, default: '0'},
+//     matches: [
+//         {
+//             type: mongoose.Schema.Types.ObjectId,
+//             ref: "Match"
+//         }
+//     ],
+//     created: {type: Date, default: Date.now()}
+// });
 
 // SETUP RESOURCES TO BE USED
 app.use("/js", express.static(__dirname + '/js'));
@@ -256,29 +100,17 @@ app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
 app.use("/node_modules", express.static(__dirname + '/node_modules'));
 
 // ROUTES
-app.get("/", function(req, res) {
-    Move.find({}, function(err, allMoves){
-        if(err){
-            console.log(err);
-        } else {
-           res.render("index",{moves : allMoves});
-        }
-     });
-});
+const indexRoutes = require('./routes/index.js')
+app.use(indexRoutes);
 
-app.get("/about", function(req, res){
-    res.render('about');
-});
+const aboutRoutes = require('./routes/about.js')
+app.use("/about", aboutRoutes);
 
-app.get("/stats", function(req, res){
-    Players.find({}, function(err, allPlayers){
-        if(err){
-            console.log(err);
-        } else {
-           res.render("stats",{players : allPlayers});
-        }
-     });
-});
+const statRoutes = require('./routes/players.js')
+app.use("/players", statRoutes);
+
+const matchRoutes = require('./routes/matches.js')
+app.use("/matches", matchRoutes);
 
 app.get("/matches", function(req, res){
     Match.find({}, function(err, allMatches){
@@ -290,8 +122,23 @@ app.get("/matches", function(req, res){
      });
 });
 
-app.get("/moves", function(req, res){
-    res.render('moves');
+const moveRoutes = require('./routes/moves.js')
+app.use("/moves", moveRoutes);
+
+// HANDLE ERRORS
+app.use((req, res, next) => {
+    const error = new Error('Not found');
+    error.status = 404;
+    next(error);
+})
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
 });
 
 // SOCKET LOGIC

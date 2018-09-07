@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "author": "nat",
   "license": "ISC",
@@ -17,7 +18,11 @@
     "eosjs": "^16.0.6",
     "express": "^4.16.3",
     "mongoose": "^5.2.9",
+    "morgan": "^1.9.0",
     "socket.io": "^2.1.1",
     "supervisor": "^0.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
   }
 }

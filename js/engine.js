@@ -1,6 +1,6 @@
 function EngineGame(options){
     var board = Board();
-    var stockFish = new Worker('../js/stockfish.js');
+    var stockFish = new Worker('../js/lib/stockfish/stockfish.js');
     // var list = document.getElementById('moves');
     var engine = stockFish;
 
