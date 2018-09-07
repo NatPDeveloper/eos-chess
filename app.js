@@ -27,7 +27,7 @@ const actionWatcher = new BaseActionWatcher(
     250, // Poll at twice the block interval for less latency
 )
 
-actionWatcher.watch() // Start watch loop
+// actionWatcher.watch() // Start watch loop
 
 // SOCKET IO SETUP
 var server = app.listen(3000);
@@ -229,7 +229,3 @@ io.on('connection', function(socket) {
 })
 
 module.exports = app;
-
-// http.listen(3000, function(){
-//     console.log('listening on *:3000');
-// });
