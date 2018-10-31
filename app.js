@@ -3,6 +3,9 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+var dotenv = require('dotenv');
+dotenv.config();
+var url = process.env.MONGOLAB_URI;
 
 // WIPE DB FOR DEMUX TO REBUILD DB
 var players = require("./models/players.js");
@@ -32,7 +35,7 @@ const effects = require("./js/lib/demux-js/effects")
 // NEW CONNECTION
 const actionReader = new NodeosActionReader(
     "https://jungle.eosio.cr:443", // Locally hosted node needed for reasonable indexing speed
-    22175600, // First actions relevant to this dapp happen at this block
+    22177000, // First actions relevant to this dapp happen at this block
 )
 
 const actionHandler = new MyActionHandler(
@@ -68,7 +71,9 @@ function generateRoomId() {
 }
 
 // APP CONFIG
-mongoose.connect("mongodb://localhost/chess_eos");
+// mongoose.connect("mongodb://localhost/chess_eos");
+mongoose.connect(url);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
