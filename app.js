@@ -5,11 +5,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var dotenv = require('dotenv');
 dotenv.config();
-var url = process.env.MONGOLAB_URI;
+// var url = process.env.MONGOLAB_URI;
 
 // WIPE DB FOR DEMUX TO REBUILD DB
 function delDB(){
-    // Remove all players
     players.remove({}, function(err){
        if(err){
            console.log(err);
