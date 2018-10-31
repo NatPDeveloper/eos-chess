@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var dotenv = require('dotenv');
 dotenv.config();
-var url = process.env.MONGOLAB_URI;
+// var url = process.env.MONGOLAB_URI;
 
 // WIPE DB FOR DEMUX TO REBUILD DB
 var players = require("./models/players.js");
@@ -17,7 +17,7 @@ function delDB(){
        }
     })
 }
-delDB();
+// delDB();
 
 // DEMUX ACTION READER SETUP
 const { NodeosActionReader } = require("demux-eos")
@@ -72,7 +72,7 @@ function generateRoomId() {
 
 // APP CONFIG
 // mongoose.connect("mongodb://localhost/chess_eos");
-mongoose.connect(url);
+mongoose.connect(MONGOLAB_URI);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
