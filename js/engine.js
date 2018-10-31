@@ -1,7 +1,7 @@
 function EngineGame(options){
+    var list = document.getElementById('moves');
     var board = Board();
     var stockFish = new Worker('../js/lib/stockfish-js/stockfish.js');
-    // var list = document.getElementById('moves');
     var engine = stockFish;
 
     // show the engine status to the front end
@@ -72,16 +72,17 @@ function EngineGame(options){
             // console.log("match " + match);
             if(match){
                 if(match[4]=="+"){ // player is being checked
-                    // window.alert("You're being Checked");
-
+                    window.alert("You're being Checked");
                 } else if(match[4]=="#"){ // player lose,  game over
+                    console.log(getMoves());
                     window.alert("Game Over! You lose :)");
-                    board.reset();
+                    // insert Scatter logic here to send match status for win
                     while( list.firstChild ){
                         list.removeChild( list.firstChild );
                     }
+                    board.reset();
                 }
-                var list = document.getElementById('moves');
+                
                 var entry = document.createElement('li');
                 entry.setAttribute("class", "playerMoves");
                 entry.appendChild(document.createTextNode(match[1] + " to " + match[2]));

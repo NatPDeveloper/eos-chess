@@ -14,8 +14,8 @@ namespace Game {
         Chess(account_name self): contract(self){}
 
         //@abi action
-        void setmove(account_name account, string match_id, string move);
+        void setstat(account_name account, string status);
     };
 
-    EOSIO_ABI(Chess, (setmove));
+    EOSIO_ABI(Chess, (setstat));
 }

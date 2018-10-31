@@ -7,22 +7,26 @@ function Board(scatter){
     console.log("why is this showing twice?");
 
     var isStockfishOn = true; // true until a player connects;
-    // var statusEl = $('#status');
+    
     var onDragStart = function(source, piece, position, orientation) {
         if(chess.in_checkmate()){
-            var confirm = window.confirm("You Lost! Reset the game?");
-            if(confirm){
-                if(isStockfishOn){
-                    chess.reset();
-                    board.start();
-                } else {
-                    socket.requestNewGame();
-                }
-                while( list.firstChild ){
-                    list.removeChild( list.firstChild );
-                }
+            scatter.setStat("loss");
+            if(isStockfishOn){
+                board.start();
+                chess.reset();
+            } else {
+                // socket.requestNewGame();
+                board.start();
+                chess.reset();
+                newGame();
+                
+                isStockfishOn=true;
+            }
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
             }
         }
+
         if ((orientation === 'white' && piece.search(/^w/) === -1) ||
             (orientation === 'black' && piece.search(/^b/) === -1)) {
             return false;
@@ -43,67 +47,32 @@ function Board(scatter){
             window.setTimeout(chessEngine.prepareAiMove(),500);
         else { 
             socket.sendMove(turn, move.from, move.to);
-
-            var room = socket.returnRoom()
-            var scatterMove = move.piece + " " + move.from + " to " + move.to;
-            
-            // ADD OPONENT TO PUSH WITH TRANSACTION
-            scatter.setMove(room, scatterMove)
-            
-            if(move.color == "w"){
-                document.querySelector("h3").style.backgroundColor = "black";
-                document.querySelector("h3").style.color = "white";
-                document.querySelector("h3").innerHTML = "BLACK TO MOVE";
-            } else if(move.color == "b") {
-                document.querySelector("h3").style.backgroundColor = "white";
-                document.querySelector("h3").style.color = "black";
-                document.querySelector("h3").innerHTML = "WHITE TO MOVE";
-            } else {
-                console.log("not needed");
-            }
         }
         // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
         var list = document.getElementById('moves');
         var entry = document.createElement('li');
         entry.setAttribute("class", "playerMoves");
         entry.appendChild(document.createTextNode(move.from + " to " + move.to));
-        list.prepend(entry);        
-    };
-
-    var updateStatus= function(){
-        var status = "";
-        var moveColor = "White";
+        list.prepend(entry);
         
-        var status = "";
-        var moveColor = "White";
-        if(chess.turn()=='b'){   
-            moveColor = "Black";
-        }
-        if(chess.in_checkmate()==true){
-            status=  "You won, " + moveColor + " is in checkmate";
-            window.alert(status);
+        if(chess.in_checkmate()){
+            scatter.setStat("win");
             if(isStockfishOn){
-                chess.reset();
                 board.start();
-            }
-            return; 
-
-            } else if(chess.in_draw()){
-                status = "Game Over, Drawn";
-
-                // PUT SCATTER DRAW LOGIC
-                
-                window.alert(status);
-                return;
+                chess.reset();
             } else {
-                status = moveColor + ' to move';
-                // check?
+                // socket.requestNewGame();
+                board.start();
+                chess.reset();
+                newGame();
                 
+                isStockfishOn=true;
             }
-        // statusEl.html(status);
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
+            }
+        }
     };
-    
-    updateStatus();
 
     var cfg = {
         showErrors: true,

@@ -4,16 +4,35 @@ const morgan = require('morgan');
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
+// WIPE DB FOR DEMUX TO REBUILD DB
+var players = require("./models/players.js");
+function delDB(){
+    // Remove all players
+    players.remove({}, function(err){
+       if(err){
+           console.log(err);
+       }
+    })
+}
+delDB();
+
 // DEMUX ACTION READER SETUP
 const { NodeosActionReader } = require("demux-eos")
 const MyActionHandler = require("./js/lib/demux-js/ActionHandler")
 const { BaseActionWatcher } = require("demux")
 const updaters = require("./js/lib/demux-js/updaters")
-const effects = require("./js/lib/demux-js/effects")
+const effects = require("./js/lib/demux-js/effects") 
 
+// OLD
+// const actionReader = new NodeosActionReader(
+//     "http://127.0.0.1:8888", // Locally hosted node needed for reasonable indexing speed
+//     179000, // First actions relevant to this dapp happen at this block
+// )
+
+// NEW CONNECTION
 const actionReader = new NodeosActionReader(
-    "http://127.0.0.1:8888", // Locally hosted node needed for reasonable indexing speed
-    172000, // First actions relevant to this dapp happen at this block
+    "https://jungle.eosio.cr:443", // Locally hosted node needed for reasonable indexing speed
+    22175600, // First actions relevant to this dapp happen at this block
 )
 
 const actionHandler = new MyActionHandler(
@@ -24,7 +43,7 @@ const actionHandler = new MyActionHandler(
 const actionWatcher = new BaseActionWatcher(
     actionReader,
     actionHandler,
-    250, // Poll at twice the block interval for less latency
+    1000, // Poll at twice the block interval for less latency
 )
 
 // actionWatcher.watch() // Start watch loop
@@ -70,28 +89,6 @@ app.use((req, res, next) => {
     next();
 });
 
-//MONGOOSE/MODEL CONFIG
-// var playersSchema = new mongoose.Schema({
-//     _id: mongoose.Schema.Types.ObjectId,
-//     layer: {
-//         id: {
-//             type: mongoose.Schema.Types.ObjectId,
-//             ref: "Player"
-//         },
-//         username: String
-//     },
-//     wins: {type: Number, default: '0'},
-//     losses: {type: Number, default: '0'},
-//     draws: {type: Number, default: '0'},
-//     matches: [
-//         {
-//             type: mongoose.Schema.Types.ObjectId,
-//             ref: "Match"
-//         }
-//     ],
-//     created: {type: Date, default: Date.now()}
-// });
-
 // SETUP RESOURCES TO BE USED
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/css", express.static(__dirname + '/css'));
@@ -108,22 +105,6 @@ app.use("/about", aboutRoutes);
 
 const statRoutes = require('./routes/players.js')
 app.use("/players", statRoutes);
-
-const matchRoutes = require('./routes/matches.js')
-app.use("/matches", matchRoutes);
-
-app.get("/matches", function(req, res){
-    Match.find({}, function(err, allMatches){
-        if(err){
-            console.log(err);
-        } else {
-           res.render("matches",{matches : allMatches});
-        }
-     });
-});
-
-const moveRoutes = require('./routes/moves.js')
-app.use("/moves", moveRoutes);
 
 // HANDLE ERRORS
 app.use((req, res, next) => {

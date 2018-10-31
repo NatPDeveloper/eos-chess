@@ -53,7 +53,10 @@ function SocketClient(){
     })
 
     socket.on("newGame",function(){
-        board.start();
+        board.reset();
+        while( list.firstChild ){
+            list.removeChild( list.firstChild );
+        }
         socket.emit("newGameRequest",room);
     })
     

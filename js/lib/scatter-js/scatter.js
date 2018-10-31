@@ -1,11 +1,18 @@
 class Scatter {
-    
     constructor() {
+        // OLD
+        // this.CHAIN_PROTOCOL = 'http';
+        // this.CHAIN_HOST = '127.0.0.1'; //'mainnet.eoscalgary.io' //'nodes.get-scatter.com' //'br.eosrio.io'
+        // this.CHAIN_PORT = '8888' //8080' //80
+        // // const CHAIN_ADDRESS = CHAIN_PROTOCOL + '://' + CHAIN_HOST + ':' + CHAIN_PORT;
+        // this.CHAIN_ID = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f';
+
+        // NEW
         this.CHAIN_PROTOCOL = 'http';
-        this.CHAIN_HOST = '127.0.0.1'; //'mainnet.eoscalgary.io' //'nodes.get-scatter.com' //'br.eosrio.io'
+        this.CHAIN_HOST = '41.161.77.154'; //'mainnet.eoscalgary.io' //'nodes.get-scatter.com' //'br.eosrio.io'
         this.CHAIN_PORT = '8888' //8080' //80
         // const CHAIN_ADDRESS = CHAIN_PROTOCOL + '://' + CHAIN_HOST + ':' + CHAIN_PORT;
-        this.CHAIN_ID = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f';
+        this.CHAIN_ID = '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca';
         
         /* Eos and Scatter Setup */
         this.network = {
@@ -44,20 +51,20 @@ class Scatter {
         }.bind(this))
     }
 
-    _setMove(roomId, move){
+    _setStat(status){
         var eos = this.scatter.eos( this.network, Eos )
         var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
         var options = { authorization: [{ actor:account.name, permission: account.authority }] };
         
-        eos.contract('eosio').then(contract => {
-            contract.setmove(account.name, roomId, move, options)
+        eos.contract('chesschessch').then(contract => {  // contract account needs to change when going to jungle..
+            contract.setstat(account.name, status, options)
         }).catch(e => {
             console.log("error", e);
         })
     }
     
     // FUNCTIONS
-    setMove(roomId, move) {
-        return this._setMove(roomId, move);
+    setStat(status) {
+        return this._setStat(status);
     }
 }

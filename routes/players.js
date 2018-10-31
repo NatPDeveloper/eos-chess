@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Player = require('../models/players');
-const Match = require('../models/match');
+// const Match = require('../models/match');
 
 router.get("/", function(req, res) {
     Player.find({}, function(err, allPlayers){
@@ -43,9 +43,8 @@ router.post('/', (req, res, next) => {
                     _id: result._id,
                     player_name: result.player_name,
                     wins: result.wins,
-                    draws: result.draws,
-                    losses: result.losses,
-                    match: result.match
+                    // draws: result.draws,
+                    losses: result.losses
                 },
                 request: {
                     type: 'GET',

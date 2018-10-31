@@ -2,11 +2,11 @@
 
 namespace Game{
 
-    void Chess::setmove(account_name account, string match_id, string move) {
+    void Chess::setstat(account_name account, string status) {
         require_auth(account);
 
         // print to node
-        print( "Hello, ", name{account}, " match_id: ",  match_id, " move: ", move);
+        print( name{account}, " ", status);
     }
 
 }

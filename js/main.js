@@ -1,8 +1,8 @@
 var init = function(){
     engine = EngineGame();
-    socket = SocketClient();
     
     var scatter = new Scatter()
+    socket = SocketClient();
 
     board = Board(scatter, socket);
     board.setChessEngine(engine);
