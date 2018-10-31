@@ -1,5 +1,10 @@
+
+var dotenv = require('dotenv');
+dotenv.config();
+var url = process.env.MONGOLAB_URI;
+
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost/chess_eos";
+// var url = "mongodb://localhost/chess_eos";
 
   function updateMatchStatus(state, payload, blockInfo, context) {
     // update Mongo object if username exists and add win/draw/loss
