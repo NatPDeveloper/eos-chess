@@ -1,7 +1,7 @@
 
 var dotenv = require('dotenv');
 dotenv.config();
-// var url = process.env.MONGOLAB_URI;
+var url = process.env.MONGOLAB_URI;
 
 var MongoClient = require('mongodb').MongoClient;
 // var url = "mongodb://localhost/chess_eos";
@@ -19,7 +19,7 @@ var MongoClient = require('mongodb').MongoClient;
       // if account, add 1 loss
     // }
     
-    MongoClient.connect(MONGOLAB_URI, function(err, db) {
+    MongoClient.connect(url, function(err, db) {
       
       var dbo = db.db("chess_eos");
       if (err) throw err;

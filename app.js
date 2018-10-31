@@ -5,10 +5,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var dotenv = require('dotenv');
 dotenv.config();
-// var url = process.env.MONGOLAB_URI;
+var url = process.env.MONGOLAB_URI;
 
 // WIPE DB FOR DEMUX TO REBUILD DB
-var players = require("./models/players.js");
 function delDB(){
     // Remove all players
     players.remove({}, function(err){
@@ -35,7 +34,7 @@ const effects = require("./js/lib/demux-js/effects")
 // NEW CONNECTION
 const actionReader = new NodeosActionReader(
     "https://jungle.eosio.cr:443", // Locally hosted node needed for reasonable indexing speed
-    22177000, // First actions relevant to this dapp happen at this block
+    22208700, // First actions relevant to this dapp happen at this block
 )
 
 const actionHandler = new MyActionHandler(
@@ -55,6 +54,8 @@ const actionWatcher = new BaseActionWatcher(
 var server = app.listen(3000);
 var io = require('socket.io')(server);
 
+var players = require("./models/players.js");
+
 // USERS LIST
 var users = []
 
@@ -72,7 +73,8 @@ function generateRoomId() {
 
 // APP CONFIG
 // mongoose.connect("mongodb://localhost/chess_eos");
-mongoose.connect(MONGOLAB_URI);
+
+// mongoose.connect(url);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
