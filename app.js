@@ -34,7 +34,7 @@ const effects = require("./js/lib/demux-js/effects")
 // NEW CONNECTION
 const actionReader = new NodeosActionReader(
     "https://jungle.eosio.cr:443", // Locally hosted node needed for reasonable indexing speed
-    22208700, // First actions relevant to this dapp happen at this block
+    22235920, // First actions relevant to this dapp happen at this block
 )
 
 const actionHandler = new MyActionHandler(
@@ -45,10 +45,10 @@ const actionHandler = new MyActionHandler(
 const actionWatcher = new BaseActionWatcher(
     actionReader,
     actionHandler,
-    1000, // Poll at twice the block interval for less latency
+    250, // Poll at twice the block interval for less latency
 )
 
-// actionWatcher.watch() // Start watch loop
+actionWatcher.watch() // Start watch loop
 
 // SERVER SETUP
 const HOST = '0.0.0.0';
