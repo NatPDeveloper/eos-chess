@@ -22,7 +22,7 @@ var MongoClient = require('mongodb').MongoClient;
     
     MongoClient.connect(url, function(err, db) {
       
-      var dbo = db.db("chess_eos");
+      var dbo = db.db("chesseos");
       if (err) throw err;
       dbo.collection("players").findOne({player_name: payload.data["account"]}, function(err, result) {
         if (err) throw err;
