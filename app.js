@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var dotenv = require('dotenv');
 dotenv.config();
-// var url = process.env.MONGOLAB_URI;
+var url = process.env.MONGOLAB_URI;
 
 // WIPE DB FOR DEMUX TO REBUILD DB
 function delDB(){
@@ -70,11 +70,11 @@ function generateRoomId() {
     return result;
 }
 
-// APP CONFIG
+// MONGO CONNECT
 // mongoose.connect("mongodb://localhost/chess_eos");
+mongoose.connect(url);
 
-// mongoose.connect(url);
-
+// APP CONFIG
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
