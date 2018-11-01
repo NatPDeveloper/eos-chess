@@ -34,7 +34,7 @@ const effects = require("./js/lib/demux-js/effects")
 // JUNGLE TESTNET
 const actionReader = new NodeosActionReader(
     "https://poll.troonblockchain.io:9999", // Locally hosted node needed for reasonable indexing speed
-    22235920, // First actions relevant to this dapp happen at this block
+    22238967, // First actions relevant to this dapp happen at this block
 )
 
 const actionHandler = new MyActionHandler(
