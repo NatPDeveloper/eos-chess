@@ -8,6 +8,10 @@ Link*: https://chesseos.herokuapp.com/
 
 *note this is currently hosted on the [Jungle Testnet](http://jungle.cryptolions.io), so in order to use it, you'll need to create a Jungle account then import the Jungle testnet's address and chain ID into Scatter.
 
+### How to Play: ###
+
+By default you are playing the AI.. Good luck there.  Or you can enter another person's EOS account name to connect with them after they've entered their own.  This uses socket.io to handle the game logic communication.  You may need to open up the console or remove the blocking of pop ups as chrome doesn't seem to like pushing the notifications through.
+
 ### EOSIO Integration: ###
 
 * [Scatter Wallet](https://get-scatter.com/)
