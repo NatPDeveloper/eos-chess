@@ -50,8 +50,14 @@ const actionWatcher = new BaseActionWatcher(
 
 // actionWatcher.watch() // Start watch loop
 
+// SERVER SETUP
+const HOST = '0.0.0.0';
+const PORT = process.env.PORT || 3000;
+var server = app.listen(PORT, HOST, function () {
+    console.log(`Our app is running on port ${ PORT }`);
+});
+
 // SOCKET IO SETUP
-var server = app.listen(3000);
 var io = require('socket.io')(server);
 
 var players = require("./models/players.js");
@@ -83,18 +89,18 @@ app.use(bodyParser.json()); // EXTRACTS JSON DATA
 app.use(morgan('dev'));
 
 // CHANGE * to MY SERVER SO ONLY I CAN INTERACT WITH API
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // * Gives access to any client
-    // res.header(
-    //     'Access-Control-Allow-Headers', 
-    //     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    // );
-    // if (req.method === 'OPTIONS') {
-    //     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-    //     return res.status(200).json({});
-    // }
-    next();
-});
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*'); // * Gives access to any client
+//     // res.header(
+//     //     'Access-Control-Allow-Headers', 
+//     //     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//     // );
+//     // if (req.method === 'OPTIONS') {
+//     //     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+//     //     return res.status(200).json({});
+//     // }
+//     next();
+// });
 
 // SETUP RESOURCES TO BE USED
 app.use("/js", express.static(__dirname + '/js'));
