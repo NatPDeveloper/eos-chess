@@ -8,9 +8,9 @@ class Scatter {
         // this.CHAIN_ID = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f';
 
         // NEW
-        this.CHAIN_PROTOCOL = 'http';
-        this.CHAIN_HOST = '41.161.77.154'; //'mainnet.eoscalgary.io' //'nodes.get-scatter.com' //'br.eosrio.io'
-        this.CHAIN_PORT = '8888' //8080' //80
+        this.CHAIN_PROTOCOL = 'https';
+        this.CHAIN_HOST = 'jungle.eosio.cr'; //'mainnet.eoscalgary.io' //'nodes.get-scatter.com' //'br.eosrio.io'
+        this.CHAIN_PORT = '443' //8080' //80
         // const CHAIN_ADDRESS = CHAIN_PROTOCOL + '://' + CHAIN_HOST + ':' + CHAIN_PORT;
         this.CHAIN_ID = '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca';
         
