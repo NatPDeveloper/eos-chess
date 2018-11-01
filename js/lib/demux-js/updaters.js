@@ -1,8 +1,7 @@
 
 var dotenv = require('dotenv');
 dotenv.config();
-var url = "mongodb://trying:asdf1p@ds147723.mlab.com:47723/chesseos";
-// process.env.MONGOLAB_URI;
+var url = process.env.MONGOLAB_URI;
 
 var MongoClient = require('mongodb').MongoClient;
 // var url = "mongodb://localhost/chess_eos";
