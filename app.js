@@ -34,7 +34,7 @@ const effects = require("./js/lib/demux-js/effects")
 // JUNGLE TESTNET
 const actionReader = new NodeosActionReader(
     "https://poll.troonblockchain.io:9999", // Locally hosted node needed for reasonable indexing speed
-    22238967, // First actions relevant to this dapp happen at this block
+    22238967, // First actions relevant to this dapp happens at this block
 )
 
 const actionHandler = new MyActionHandler(
@@ -45,7 +45,7 @@ const actionHandler = new MyActionHandler(
 const actionWatcher = new BaseActionWatcher(
     actionReader,
     actionHandler,
-    1000, // Poll at twice the block interval for less latency
+    500, // Poll at twice the block interval for less latency
 )
 
 actionWatcher.watch() // Start watch loop
@@ -60,6 +60,7 @@ var server = app.listen(PORT, HOST, function () {
 // SOCKET IO SETUP
 var io = require('socket.io')(server);
 
+// PLAYERS MONGOOSE MODEL
 var players = require("./models/players.js");
 
 // USERS LIST
@@ -87,20 +88,6 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json()); // EXTRACTS JSON DATA
 app.use(morgan('dev'));
-
-// CHANGE * to MY SERVER SO ONLY I CAN INTERACT WITH API
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*'); // * Gives access to any client
-//     // res.header(
-//     //     'Access-Control-Allow-Headers', 
-//     //     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-//     // );
-//     // if (req.method === 'OPTIONS') {
-//     //     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-//     //     return res.status(200).json({});
-//     // }
-//     next();
-// });
 
 // SETUP RESOURCES TO BE USED
 app.use("/js", express.static(__dirname + '/js'));

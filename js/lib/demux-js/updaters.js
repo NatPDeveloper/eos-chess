@@ -51,13 +51,12 @@ var MongoClient = require('mongodb').MongoClient;
         }
         db.close();
       });
-      
     });
   }
   
   const updaters = [
     {
-      actionType: "eosio::setstat",
+      actionType: "chesschess11::setstat", // updated with current contract account name
       updater: updateMatchStatus,
     },
   ]
