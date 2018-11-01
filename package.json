@@ -1,6 +1,9 @@
 {
   "name": "chess-eos",
   "version": "1.0.0",
+  "engines": {
+    "node": "8.11.3"
+  },
   "description": "",
   "main": "app.js",
   "scripts": {
