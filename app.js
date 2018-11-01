@@ -25,15 +25,15 @@ const { BaseActionWatcher } = require("demux")
 const updaters = require("./js/lib/demux-js/updaters")
 const effects = require("./js/lib/demux-js/effects") 
 
-// OLD
+// LOCAL
 // const actionReader = new NodeosActionReader(
 //     "http://127.0.0.1:8888", // Locally hosted node needed for reasonable indexing speed
 //     179000, // First actions relevant to this dapp happen at this block
 // )
 
-// NEW CONNECTION
+// JUNGLE TESTNET
 const actionReader = new NodeosActionReader(
-    "https://jungle.eosio.cr:443", // Locally hosted node needed for reasonable indexing speed
+    "https://poll.troonblockchain.io:9999", // Locally hosted node needed for reasonable indexing speed
     22235920, // First actions relevant to this dapp happen at this block
 )
 
