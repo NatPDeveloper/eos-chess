@@ -45,7 +45,7 @@ const actionHandler = new MyActionHandler(
 const actionWatcher = new BaseActionWatcher(
     actionReader,
     actionHandler,
-    250, // Poll at twice the block interval for less latency
+    1000, // Poll at twice the block interval for less latency
 )
 
 actionWatcher.watch() // Start watch loop
