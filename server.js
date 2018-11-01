@@ -1,8 +1,8 @@
 const http = require('http');
 const app = require('./app');
 
-const port = (process.env.PORT || 5000); // sets port and defaults to 5000
+// const port = (); // sets port and defaults to 5000
 
 // const server = http.createServer(app);
 
-server.listen(port);
+server.listen((process.env.PORT || 5000), (process.env.YOUR_HOST || '0.0.0.0'));
