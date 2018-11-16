@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var dotenv = require('dotenv');
 dotenv.config();
-var url = process.env.MONGOLAB_URI;
+var url = process.env.MONGOLAB_URI2;
 
 // WIPE DB FOR DEMUX TO REBUILD DB
 function delDB(){

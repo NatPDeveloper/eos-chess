@@ -10,7 +10,9 @@ function Board(scatter){
     
     var onDragStart = function(source, piece, position, orientation) {
         if(chess.in_checkmate()){
-            scatter.setStat("loss");
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
+            }
             if(isStockfishOn){
                 board.start();
                 chess.reset();
@@ -22,9 +24,7 @@ function Board(scatter){
                 
                 isStockfishOn=true;
             }
-            while( list.firstChild ){
-                list.removeChild( list.firstChild );
-            }
+            scatter.setStat("loss");
         }
 
         if ((orientation === 'white' && piece.search(/^w/) === -1) ||
@@ -44,7 +44,7 @@ function Board(scatter){
         if (move === null) return 'snapback';
         //player just end turn, CPU starts searching after a second
         if(isStockfishOn)
-            window.setTimeout(chessEngine.prepareAiMove(),500);
+            window.setTimeout(chessEngine.prepareAiMove(),1000);
         else { 
             socket.sendMove(turn, move.from, move.to);
         }
@@ -56,7 +56,9 @@ function Board(scatter){
         list.prepend(entry);
         
         if(chess.in_checkmate()){
-            scatter.setStat("win");
+            while( list.firstChild ){
+                list.removeChild( list.firstChild );
+            }
             if(isStockfishOn){
                 board.start();
                 chess.reset();
@@ -68,9 +70,20 @@ function Board(scatter){
                 
                 isStockfishOn=true;
             }
-            while( list.firstChild ){
-                list.removeChild( list.firstChild );
-            }
+            scatter.setStat("win");
+        }
+        
+        console.log("dropped");
+        if(document.querySelector("#status").innerHTML === "WHITE TO MOVE") {
+            document.querySelector("h3").style.backgroundColor = "black";
+            document.querySelector("h3").style.color = "white";
+            document.querySelector("h3").innerHTML = "BLACK TO MOVE"
+            console.log("changed to black");
+        } else if(document.querySelector("#status").innerHTML === "BLACK TO MOVE") {
+            document.querySelector("h3").style.backgroundColor = "white";
+            document.querySelector("h3").style.color = "black";
+            document.querySelector("h3").innerHTML = "WHITE TO MOVE"
+            console.log("changed to white");
         }
     };
 
