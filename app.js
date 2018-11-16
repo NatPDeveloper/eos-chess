@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 var dotenv = require('dotenv');
 dotenv.config();
-var url = process.env.MONGOLAB_URI2;
+var url = process.env.MONGOLAB_URI;
 
 // PLAYERS MONGOOSE MODEL
 var players = require("./models/players.js");
