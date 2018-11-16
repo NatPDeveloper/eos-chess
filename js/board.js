@@ -72,19 +72,21 @@ function Board(scatter){
             }
             scatter.setStat("win");
         }
-        
-        console.log("dropped");
-        if(document.querySelector("#status").innerHTML === "WHITE TO MOVE") {
-            document.querySelector("h3").style.backgroundColor = "black";
-            document.querySelector("h3").style.color = "white";
-            document.querySelector("h3").innerHTML = "BLACK TO MOVE"
-            console.log("changed to black");
-        } else if(document.querySelector("#status").innerHTML === "BLACK TO MOVE") {
-            document.querySelector("h3").style.backgroundColor = "white";
-            document.querySelector("h3").style.color = "black";
-            document.querySelector("h3").innerHTML = "WHITE TO MOVE"
-            console.log("changed to white");
+        if(!isStockfishOn){
+            console.log("dropped");
+            if(document.querySelector("#status").innerHTML === "WHITE TO MOVE") {
+                document.querySelector("h3").style.backgroundColor = "black";
+                document.querySelector("h3").style.color = "white";
+                document.querySelector("h3").innerHTML = "BLACK TO MOVE"
+                console.log("changed to black");
+            } else if(document.querySelector("#status").innerHTML === "BLACK TO MOVE") {
+                document.querySelector("h3").style.backgroundColor = "white";
+                document.querySelector("h3").style.color = "black";
+                document.querySelector("h3").innerHTML = "WHITE TO MOVE"
+                console.log("changed to white");
+            }
         }
+        
     };
 
     var cfg = {
