@@ -8,7 +8,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "npm start"
+    "start": "node app.js"
   },
   "author": "nat",
   "license": "ISC",
