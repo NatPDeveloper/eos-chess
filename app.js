@@ -7,6 +7,9 @@ var dotenv = require('dotenv');
 dotenv.config();
 var url = process.env.MONGOLAB_URI2;
 
+// PLAYERS MONGOOSE MODEL
+var players = require("./models/players.js");
+
 // WIPE DB FOR DEMUX TO REBUILD DB
 function delDB(){
     players.remove({}, function(err){
@@ -58,9 +61,6 @@ var server = app.listen(PORT, HOST, function () {
 
 // SOCKET IO SETUP
 var io = require('socket.io')(server);
-
-// PLAYERS MONGOOSE MODEL
-var players = require("./models/players.js");
 
 // USERS LIST
 var users = []
