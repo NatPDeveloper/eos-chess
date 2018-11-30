@@ -62,7 +62,7 @@ const actionWatcher = new BaseActionWatcher(
     250, // Poll at twice the block interval for less latency
 )
 
-// actionWatcher.watch() // Start watch loop
+actionWatcher.watch() // Start watch loop
 
 // SERVER SETUP
 const HOST = '0.0.0.0';
