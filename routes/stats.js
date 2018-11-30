@@ -48,7 +48,7 @@ router.post('/', (req, res, next) => {
                 },
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3000/players/' + result._id
+                    url: 'http://localhost:3000/stats/' + result._id
                 }
             });
         })

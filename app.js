@@ -111,7 +111,7 @@ app.use("/node_modules", express.static(__dirname + '/node_modules'));
 const indexRoutes = require('./routes/index.js')
 app.use(indexRoutes);
 
-const aboutRoutes = require('./routes/howToPlay.js')
+const aboutRoutes = require('./routes/how-to-play.js')
 app.use("/how-to-play", aboutRoutes);
 
 const statRoutes = require('./routes/stats.js')
