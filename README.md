@@ -2,8 +2,6 @@
 
 - - - -
 
-## !! The game is currently broken since the Jungle upgraded to 2.0.  I need to repush the contract in order for it to work again which I will do in time.. You can still play the AI though if you want to get your bottom kicked##
-
 An EOS based chess game built on [chess.js's](https://github.com/jhlywa/chess.js/blob/master/README.md) move generation/validation, piece placement/movement, and check/checkmate/stalemate detection as well as [chessboard.js's UI](http://chessboardjs.com/).
 
 Link*: https://chesseos.herokuapp.com/ 
