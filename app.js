@@ -48,7 +48,7 @@ const effects = require("./js/lib/demux-js/effects")
 // JUNGLE TESTNET
 const actionReader = new NodeosActionReader(
     "https://jungle.eosn.io:443", // Locally hosted node needed for reasonable indexing speed
-    22238967, // First actions relevant to this dapp happens at this block
+    1196555, // First actions relevant to this dapp happens at this block
 )
 
 const actionHandler = new MyActionHandler(
