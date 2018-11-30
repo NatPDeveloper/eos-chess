@@ -56,7 +56,7 @@ class Scatter {
         var account = this.scatter.identity.accounts.find(account => account.blockchain === 'eos');
         var options = { authorization: [{ actor:account.name, permission: account.authority }] };
         
-        eos.contract('chesschessch').then(contract => {  // contract account needs to change when going to jungle..
+        eos.contract('chesseosches').then(contract => {  // contract account needs to change when going to jungle..
             contract.setstat(account.name, status, options)
         }).catch(e => {
             console.log("error", e);
