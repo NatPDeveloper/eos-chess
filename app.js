@@ -111,11 +111,11 @@ app.use("/node_modules", express.static(__dirname + '/node_modules'));
 const indexRoutes = require('./routes/index.js')
 app.use(indexRoutes);
 
-const aboutRoutes = require('./routes/about.js')
-app.use("/about", aboutRoutes);
+const aboutRoutes = require('./routes/howToPlay.js')
+app.use("/how-to-play", aboutRoutes);
 
-const statRoutes = require('./routes/players.js')
-app.use("/players", statRoutes);
+const statRoutes = require('./routes/stats.js')
+app.use("/stats", statRoutes);
 
 // HANDLE ERRORS
 app.use((req, res, next) => {
