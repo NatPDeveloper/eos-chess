@@ -30,7 +30,7 @@ function delDB(){
        }
     })
 }
-// delDB();
+delDB();
 
 // DEMUX ACTION READER SETUP
 const { NodeosActionReader } = require("demux-eos")
