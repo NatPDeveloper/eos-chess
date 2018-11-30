@@ -38,7 +38,7 @@ function EngineGame(options){
             var move = history[i];
             moves+= " " + move.from + move.to + (move.promotion?move.promotion:"");
         }
-        console.log("MOVES : " + moves);
+        // console.log("MOVES : " + moves);
         return moves;
     }
 
@@ -48,7 +48,7 @@ function EngineGame(options){
     function prepareMove(){
         $('.logge').text(board.getPgn()+'\n');
        
-        console.log("CPU is thinking ... ");
+        // console.log("CPU is thinking ... ");
         //update the latest board positions before search for moves
         board.setFenPosition();
         var turn = board.getTurn()=='w'?'white':'black';
@@ -69,12 +69,18 @@ function EngineGame(options){
             reportEngineStatus();
         } else {
             var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?.\bbestmoveSan ...([+]|[#])?/);
-            // console.log("match " + match);
+            
             if(match){
+                var entry = document.createElement('li');
+                entry.setAttribute("class", "playerMoves");
+                entry.appendChild(document.createTextNode(match[1] + " to " + match[2]));
+                list.prepend(entry)
+                board.makeMove(match[1],match[2],match[3]);
+                prepareMove();
                 if(match[4]=="+"){ // player is being checked
                     window.alert("You're being Checked");
                 } else if(match[4]=="#"){ // player lose,  game over
-                    console.log(getMoves());
+                    // console.log(getMoves());
                     window.alert("Game Over! You lose :)");
                     // insert Scatter logic here to send match status for win
                     while( list.firstChild ){
@@ -82,13 +88,6 @@ function EngineGame(options){
                     }
                     board.reset();
                 }
-                
-                var entry = document.createElement('li');
-                entry.setAttribute("class", "playerMoves");
-                entry.appendChild(document.createTextNode(match[1] + " to " + match[2]));
-                list.prepend(entry)
-                board.makeMove(match[1],match[2],match[3]);
-                prepareMove();
             }
         }
     }

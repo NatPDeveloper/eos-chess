@@ -10,21 +10,21 @@ function Board(scatter){
     
     var onDragStart = function(source, piece, position, orientation) {
         if(chess.in_checkmate()){
-            while( list.firstChild ){
+            while( list.firstChild != null ){
                 list.removeChild( list.firstChild );
             }
             if(isStockfishOn){
-                board.start();
                 chess.reset();
             } else {
-                // socket.requestNewGame();
-                board.start();
                 chess.reset();
                 newGame();
                 
                 isStockfishOn=true;
             }
             scatter.setStat("loss");
+            document.querySelector("h3").style.backgroundColor = "white";
+            document.querySelector("h3").style.color = "black";
+            document.querySelector("h3").innerHTML = "WHITE TO MOVE";
         }
 
         if ((orientation === 'white' && piece.search(/^w/) === -1) ||
@@ -49,7 +49,7 @@ function Board(scatter){
             socket.sendMove(turn, move.from, move.to);
         }
         // ADDS LI TO MOVES LIST AFTER DROP EVENT #NOT DRY
-        var list = document.getElementById('moves');
+        // var list = document.getElementById('moves');
         var entry = document.createElement('li');
         entry.setAttribute("class", "playerMoves");
         entry.appendChild(document.createTextNode(move.from + " to " + move.to));
@@ -60,29 +60,29 @@ function Board(scatter){
                 list.removeChild( list.firstChild );
             }
             if(isStockfishOn){
-                board.start();
                 chess.reset();
             } else {
-                // socket.requestNewGame();
-                board.start();
                 chess.reset();
                 newGame();
                 
                 isStockfishOn=true;
             }
             scatter.setStat("win");
+            document.querySelector("h3").style.backgroundColor = "white";
+            document.querySelector("h3").style.color = "black";
+            document.querySelector("h3").innerHTML = "WHITE TO MOVE";
         }
         if(!isStockfishOn){
             console.log("dropped");
             if(document.querySelector("#status").innerHTML === "WHITE TO MOVE") {
                 document.querySelector("h3").style.backgroundColor = "black";
                 document.querySelector("h3").style.color = "white";
-                document.querySelector("h3").innerHTML = "BLACK TO MOVE"
+                document.querySelector("h3").innerHTML = "BLACK TO MOVE";
                 console.log("changed to black");
             } else if(document.querySelector("#status").innerHTML === "BLACK TO MOVE") {
                 document.querySelector("h3").style.backgroundColor = "white";
                 document.querySelector("h3").style.color = "black";
-                document.querySelector("h3").innerHTML = "WHITE TO MOVE"
+                document.querySelector("h3").innerHTML = "WHITE TO MOVE";
                 console.log("changed to white");
             }
         }
