@@ -47,7 +47,7 @@ const effects = require("./js/lib/demux-js/effects")
 
 // JUNGLE TESTNET
 const actionReader = new NodeosActionReader(
-    "https://poll.troonblockchain.io:9999", // Locally hosted node needed for reasonable indexing speed
+    "https://jungle.eosn.io:443", // Locally hosted node needed for reasonable indexing speed
     22238967, // First actions relevant to this dapp happens at this block
 )
 
@@ -62,7 +62,7 @@ const actionWatcher = new BaseActionWatcher(
     250, // Poll at twice the block interval for less latency
 )
 
-actionWatcher.watch() // Start watch loop
+// actionWatcher.watch() // Start watch loop
 
 // SERVER SETUP
 const HOST = '0.0.0.0';
