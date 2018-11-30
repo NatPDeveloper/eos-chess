@@ -55,7 +55,7 @@ var MongoClient = require('mongodb').MongoClient;
   
   const updaters = [
     {
-      actionType: "chesschessch::setstat", // updated with current contract account name
+      actionType: "chesseosches::setstat", // updated with current contract account name
       updater: updateMatchStatus,
     },
   ]

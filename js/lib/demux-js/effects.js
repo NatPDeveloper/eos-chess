@@ -4,7 +4,7 @@ function logUpdate(state, payload, blockInfo, context) {
 
 const effects = [
   {
-    actionType: "chesschessch::setstat",
+    actionType: "chesseosches::setstat",
     effect: logUpdate,
   },
 ]
