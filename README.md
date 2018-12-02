@@ -19,6 +19,10 @@ By default you are playing the AI.. Good luck there.  Or you can enter a random 
 * [Jungle Testnet](http://jungle.cryptolions.io)
 * [demux-js](https://github.com/EOSIO/demux-js) library used to update MongoDB
 
+### Stack: ###
+
+Bootstrap, Express, Mongoose, C++
+
 ### How to set up: ###
 
 * Install EOSIO (docs: https://developers.eos.io/eosio-home/docs), NodeJS, MongoDB, and the EOS wallet: https://get-scatter.com/. I built this using chrome, so I cannot guarantee any other browsers will play nice.
