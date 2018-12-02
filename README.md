@@ -16,7 +16,7 @@ By default you are playing the AI.. Good luck there.  Or you can enter a random 
 
 * [Scatter Wallet](https://get-scatter.com/)
 * [EOSIO Smart Contract](https://github.com/eosio/eos)
-* [Jungle Testnet](http://jungle.cryptolions.io)
+* [Jungle Testnet](https://monitor.jungletestnet.io/)
 * [demux-js](https://github.com/EOSIO/demux-js) library used to update MongoDB
 
 ### Stack: ###
