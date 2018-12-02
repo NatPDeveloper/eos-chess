@@ -6,7 +6,7 @@ An EOS based chess game built on [chess.js's](https://github.com/jhlywa/chess.js
 
 Link*: https://chesseos.herokuapp.com/ 
 
-*note this is currently hosted on the [Jungle Testnet](http://jungle.cryptolions.io), so in order to use it, you'll need to create a Jungle account then import the Jungle testnet's address and chain ID into Scatter. Tutorial: https://eosio.stackexchange.com/questions/3270/how-to-get-local-testnet-account-for-use-with-scatter
+*note this is currently hosted on the [Jungle Testnet](http://jungle.cryptolions.io), so in order to use it, you'll need to [create a Jungle account](https://monitor.jungletestnet.io/#account) then import the Jungle testnet's address and chain ID into Scatter. Tutorial: https://eosio.stackexchange.com/questions/3270/how-to-get-local-testnet-account-for-use-with-scatter
 
 ### How to Play: ###
 
