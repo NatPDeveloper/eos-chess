@@ -43,7 +43,7 @@ Bootstrap, Express, Mongoose, C++
 
 * In app.js, comment out lines 48-52 since that is for the jungle testnet then uncomment out 42-46 for localhosted chain.  Be sure to set line 45 to whatever block your chain is currently at.
 
-* create a user on your local nodeos instance `cleos create account eosio your_new_account_name YOUR_PUBLIC_KEY -p eosio@active`
+* create a user on your local nodeos instance `cleos create account eosio your_new_account_name YOUR_PUBLIC_KEY_OWNER YOUR_PUBLIC_KEY_ACTIVE -p eosio@active`
 
   * Tutorial if you're having trouble with step 10: https://developers.eos.io/eosio-home/docs/accounts-1
 
